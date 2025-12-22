@@ -1,34 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Legend: React.FC = () => {
-  const legendItems = [
-    { color: '#059669', label: 'Hutan Mangrove', description: 'Kawasan hutan bakau' },
-    { color: '#10b981', label: 'Area Luas (> 0.0002°²)', description: 'Kawasan mangrove luas' },
-    { color: '#f59e0b', label: 'Area Sedang', description: 'Kawasan mangrove sedang' },
-    { color: '#ef4444', label: 'Area Kecil', description: 'Kawasan mangrove kecil' },
-  ];
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 max-w-xs">
-      <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
-        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-        </svg>
-        Legenda
-      </h3>
-      <div className="space-y-2">
-        {legendItems.map((item, index) => (
-          <div key={index} className="flex items-start space-x-3 group hover:bg-gray-50 p-2 rounded transition-colors">
-            <div
-              className="w-6 h-6 rounded border-2 border-gray-300 flex-shrink-0 mt-0.5 shadow-sm"
-              style={{ backgroundColor: item.color }}
-            />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-800">{item.label}</p>
-              <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
+    <div className="flex flex-col items-end">
+      <div 
+        className={`bg-white rounded-2xl shadow-2xl border border-gray-100 transition-all duration-300 ease-in-out overflow-hidden ${
+          isCollapsed ? 'w-12 h-12' : 'w-64 sm:w-72'
+        }`}
+      >
+        {/* Header / Toggle Button */}
+        <div className={`flex items-center justify-between ${isCollapsed ? 'p-0' : 'p-4 border-b border-gray-100 bg-gray-50/50'}`}>
+          {!isCollapsed && (
+            <h3 className="text-xs font-bold text-gray-800 tracking-widest flex items-center uppercase">
+              <span className="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+              Legenda
+            </h3>
+          )}
+          
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className={`flex items-center justify-center transition-all duration-200 ${
+              isCollapsed 
+              ? 'w-12 h-12 hover:bg-emerald-50 text-emerald-600' 
+              : 'p-1.5 hover:bg-gray-100 rounded-lg text-gray-400'
+            }`}
+            aria-label="Toggle legend"
+          >
+            {isCollapsed ? (
+              /* Icon saat Minimize: Chevron Up agar mengesankan bisa dibuka ke atas */
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
+              </svg>
+            ) : (
+              /* Icon saat Expand: Chevron Down */
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            )}
+          </button>
+        </div>
+
+        {/* Legend Content */}
+        {!isCollapsed && (
+          <div className="p-4 space-y-4">
+            <div className="flex items-center space-x-3 group">
+              <div className="w-4 h-4 rounded shadow-sm group-hover:scale-110 transition-transform" style={{ backgroundColor: '#059669' }} />
+              <span className="text-sm font-medium text-gray-700">Hutan Mangrove</span>
+            </div>
+            
+            <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100">
+              <p className="text-[10px] text-blue-600 font-medium leading-relaxed italic text-center">
+                Klik area peta untuk detail data
+              </p>
             </div>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
