@@ -8,17 +8,17 @@ const App: React.FC = () => {
   const [geoJsonData, setGeoJsonData] = useState<MangroveGeoJSON | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [visibleLayers, setVisibleLayers] = useState({
+  const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({
     mangrove: true,
   });
   const [basemap, setBasemap] = useState<'satellite' | 'street'>('satellite');
 
   useEffect(() => {
-    // Memuat data GeoJSON dari folder public/data/
-    fetch('/data/mangrove.geojson')
+    // Memuat data GeoJSON. Gunakan './' agar kompatibel dengan GitHub Pages
+    fetch('./data/mangrove.geojson')
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Gagal memuat data GeoJSON');
+          throw new Error('Gagal memuat data GeoJSON. Pastikan file ada di public/data/');
         }
         return response.json();
       })
@@ -27,7 +27,7 @@ const App: React.FC = () => {
       })
       .catch((err) => {
         console.error('Error loading GeoJSON:', err);
-        setError('Gagal memuat data peta. Pastikan file mangrove.geojson ada di folder public/data/');
+        setError('Gagal memuat data peta. Pastikan folder public/data/mangrove.geojson tersedia.');
       });
   }, []);
 
@@ -48,7 +48,7 @@ const App: React.FC = () => {
             </svg>
           </div>
           <h2 className="text-xl font-bold text-gray-800 mb-2">Terjadi Kesalahan</h2>
-          <p className="text-gray-600 text-sm leading-relaxed">{error}</p>
+          <p className="text-gray-600 text-sm">{error}</p>
         </div>
       </div>
     );
@@ -56,7 +56,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-white font-sans">
-      {/* Sidebar Kontrol */}
+      {/* Sidebar untuk kontrol layer */}
       <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -65,7 +65,7 @@ const App: React.FC = () => {
       />
 
       <div className="flex-1 relative">
-        {/* Floating Basemap Switcher (Kanan Atas) */}
+        {/* Floating Basemap Switcher di Kanan Atas */}
         <div className="absolute top-6 right-6 z-[1000]">
           <div className="bg-white/80 backdrop-blur-md p-1.5 rounded-2xl shadow-xl border border-white/50 flex gap-1">
             <button
@@ -97,7 +97,7 @@ const App: React.FC = () => {
           basemap={basemap}
         />
 
-        {/* Komponen Legenda (Ditempatkan di atas atribusi Leaflet) */}
+        {/* Komponen Legenda dinaikkan agar tidak menutupi atribusi */}
         <div className="fixed right-4 bottom-12 z-[900]">
           <Legend />
         </div>

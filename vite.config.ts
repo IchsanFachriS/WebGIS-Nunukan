@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/WebGIS-Nunukan/', // GANTI dengan nama repository GitHub Anda
+  // Ganti dengan nama repository Anda persis seperti di URL GitHub
+  base: '/WebGIS-Nunukan/', 
 })
