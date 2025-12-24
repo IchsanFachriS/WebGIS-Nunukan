@@ -1,3 +1,5 @@
+import { Feature, FeatureCollection, Geometry } from 'geojson';
+
 export interface MangroveProperties {
   NAMOBJ: string | null;
   FCODE: string;
@@ -10,19 +12,10 @@ export interface MangroveProperties {
   [key: string]: any;
 }
 
-export interface MangroveFeature {
-  type: 'Feature';
-  geometry: {
-    type: 'Polygon' | 'MultiPolygon';
-    coordinates: number[][][] | number[][][][];
-  };
-  properties: MangroveProperties;
-}
+// Gunakan type dari geojson standard untuk kompatibilitas lebih baik
+export type MangroveFeature = Feature<Geometry, MangroveProperties>;
 
-export interface MangroveGeoJSON {
-  type: 'FeatureCollection';
-  features: MangroveFeature[];
-}
+export type MangroveGeoJSON = FeatureCollection<Geometry, MangroveProperties>;
 
 export interface MapStats {
   totalArea: number;

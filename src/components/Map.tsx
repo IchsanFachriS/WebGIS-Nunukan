@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { MangroveGeoJSON, MangroveFeature } from '../types';
+import { MangroveGeoJSON } from '../types';
 import 'leaflet/dist/leaflet.css';
 
 interface MapProps {
@@ -31,7 +31,8 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap }) => {
     fillOpacity: 0.6,
   });
 
-  const onEachFeature = (feature: MangroveFeature, layer: L.Layer) => {
+  // Fix: Ubah tipe parameter menjadi any atau gunakan GeoJSON.Feature
+  const onEachFeature = (feature: any, layer: L.Layer) => {
     const props = feature.properties;
     const areaInHa = (props.SHAPE_Area * 111000 * 111000) / 10000;
     
@@ -50,7 +51,7 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap }) => {
         center={[4.08, 117.67]}
         zoom={11}
         className="w-full h-full"
-        zoomControl={false} // Kita pindahkan ke kanan bawah nanti agar lebih rapi
+        zoomControl={false}
       >
         {/* Render kedua layer tapi kontrol opacity/visibility via basemap state */}
         <TileLayer
@@ -70,7 +71,7 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap }) => {
 
         {geoJsonData && (
           <GeoJSON
-            key={JSON.stringify(geoJsonData.features.length)} // Hanya re-render jika jumlah data berubah
+            key={JSON.stringify(geoJsonData.features.length)}
             data={geoJsonData as any}
             style={geoJsonStyle}
             onEachFeature={onEachFeature}
