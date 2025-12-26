@@ -19,11 +19,9 @@ const DocumentPage: React.FC = () => {
       size: '2.5 MB',
       date: 'Desember 2024',
     },
-    // Tambahkan dokumen lain di sini
   ];
 
   const handleDownload = (filename: string) => {
-    // Path ke file PDF di folder public
     const link = document.createElement('a');
     link.href = `./documents/${filename}`;
     link.download = filename;
@@ -31,17 +29,17 @@ const DocumentPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
+    <div className="min-h-[calc(100vh-5rem)] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl shadow-xl mb-4">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500/20 to-blue-500/20 backdrop-blur-sm rounded-2xl shadow-2xl mb-4 border border-teal-400/30">
+            <svg className="w-8 h-8 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-3">Dokumen</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">Dokumen</h1>
+          <p className="text-slate-400 max-w-2xl mx-auto">
             Koleksi dokumen terkait kegiatan pengabdian masyarakat dan pemetaan mangrove
           </p>
         </div>
@@ -51,17 +49,17 @@ const DocumentPage: React.FC = () => {
           {documents.map((doc) => (
             <div
               key={doc.id}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100"
+              className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-2xl hover:shadow-teal-500/20 transition-all duration-300 overflow-hidden group border border-slate-700/50 hover:border-teal-500/50"
             >
               {/* Document Icon Header */}
-              <div className="bg-gradient-to-br from-red-50 to-red-100 p-8 flex items-center justify-center">
+              <div className="bg-gradient-to-br from-red-900/30 to-red-800/30 p-8 flex items-center justify-center border-b border-slate-700/50">
                 <div className="relative">
-                  <svg className="w-20 h-20 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-20 h-20 text-red-400" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" />
-                    <path d="M14 2v6h6" fill="white" />
-                    <path d="M9 13h6M9 17h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M14 2v6h6" fill="rgba(30, 41, 59, 0.8)" />
+                    <path d="M9 13h6M9 17h6" stroke="rgba(30, 41, 59, 0.8)" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
-                  <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-lg">
+                  <div className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-2 py-1 rounded-lg shadow-lg">
                     PDF
                   </div>
                 </div>
@@ -69,15 +67,15 @@ const DocumentPage: React.FC = () => {
 
               {/* Document Info */}
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-emerald-600 transition-colors">
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors tracking-tight">
                   {doc.title}
                 </h3>
-                <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+                <p className="text-sm text-slate-400 mb-4 line-clamp-3">
                   {doc.description}
                 </p>
 
                 {/* Document Meta */}
-                <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
+                <div className="flex items-center justify-between text-xs text-slate-500 mb-4">
                   <span className="flex items-center">
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -96,7 +94,7 @@ const DocumentPage: React.FC = () => {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleDownload(doc.filename)}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    className="flex-1 bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-teal-500/30 flex items-center justify-center gap-2"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -105,7 +103,7 @@ const DocumentPage: React.FC = () => {
                   </button>
                   <button
                     onClick={() => window.open(`./documents/${doc.filename}`, '_blank')}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center"
+                    className="bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center border border-slate-600/50"
                     title="Lihat"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,16 +117,16 @@ const DocumentPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Empty State (jika belum ada dokumen) */}
+        {/* Empty State */}
         {documents.length === 0 && (
           <div className="text-center py-20">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-full mb-6">
-              <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-slate-800/50 backdrop-blur-sm rounded-full mb-6 border border-slate-700/50">
+              <svg className="w-12 h-12 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Belum Ada Dokumen</h3>
-            <p className="text-gray-600">Dokumen akan segera ditambahkan</p>
+            <h3 className="text-xl font-bold text-white mb-2">Belum Ada Dokumen</h3>
+            <p className="text-slate-400">Dokumen akan segera ditambahkan</p>
           </div>
         )}
       </div>

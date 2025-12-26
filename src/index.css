@@ -1,17 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 body {
   background-color: #f8fafc;
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Sora', 'Outfit', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 /* Smooth Transition untuk semua elemen UI */
@@ -24,19 +31,45 @@ body {
 /* Custom Popup Style Modern */
 .leaflet-popup-content-wrapper {
   border-radius: 16px !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
   padding: 4px;
+  border: 1px solid rgba(14, 116, 144, 0.1);
 }
 
 .leaflet-popup-tip {
   box-shadow: none !important;
 }
 
-/* Sembunyikan Logo Leaflet untuk tampilan cleaner */
+/* Leaflet Attribution dengan tema navy-teal */
 .leaflet-control-attribution {
-  background: rgba(255, 255, 255, 0.7) !important;
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.8) !important;
+  backdrop-filter: blur(8px);
   font-size: 9px !important;
-  border-radius: 4px;
+  border-radius: 6px;
   margin: 10px !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(20, 184, 166, 0.2);
+}
+
+.leaflet-control-attribution a {
+  color: rgba(94, 234, 212, 0.9) !important;
+}
+
+/* Custom scrollbar dengan tema navy-teal */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #14b8a6, #0e7490);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #0d9488, #0c4a6e);
 }
