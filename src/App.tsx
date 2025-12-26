@@ -99,7 +99,7 @@ const App: React.FC = () => {
 
         {/* Komponen Legenda dinaikkan agar tidak menutupi atribusi */}
         <div className="fixed right-4 bottom-12 z-[900]">
-          <Legend />
+          <Legend visibleLayers={visibleLayers} />
         </div>
       </div>
     </div>

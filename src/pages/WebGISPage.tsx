@@ -72,7 +72,7 @@ const WebGISPage: React.FC = () => {
                   ? 'bg-gradient-to-r from-teal-500 to-blue-600 text-white shadow-lg shadow-teal-500/30' 
                   : 'text-slate-300 hover:bg-slate-700/50'
               }`}
-            > Satelit </button>
+            >Satelit</button>
             <button
               onClick={() => setBasemap('street')}
               className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all duration-300 tracking-wide ${
@@ -80,7 +80,7 @@ const WebGISPage: React.FC = () => {
                   ? 'bg-gradient-to-r from-teal-500 to-blue-600 text-white shadow-lg shadow-teal-500/30' 
                   : 'text-slate-300 hover:bg-slate-700/50'
               }`}
-            > OSM </button>
+            >OSM</button>
           </div>
         </div>
 
@@ -91,8 +91,9 @@ const WebGISPage: React.FC = () => {
           showBoundary={visibleLayers.boundary}
         />
 
+        {/* Legenda Dinamis - Pass visibleLayers sebagai prop */}
         <div className="fixed right-4 bottom-12 z-[900]">
-          <Legend />
+          <Legend visibleLayers={visibleLayers} />
         </div>
       </div>
     </div>

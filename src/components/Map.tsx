@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import omnivore from 'leaflet-omnivore';
 import { MangroveGeoJSON } from '../types';
+import GeoTIFFLayer from './GeotiffLayer';
 import 'leaflet/dist/leaflet.css';
 
 interface MapProps {
@@ -18,7 +19,6 @@ const KMLLayer: React.FC<{ show: boolean }> = ({ show }) => {
 
   useEffect(() => {
     if (show) {
-      // Membuat pane khusus agar selalu di atas (zIndex 650 lebih tinggi dari GeoJSON standar)
       if (!map.getPane('boundaryPane')) {
         map.createPane('boundaryPane');
         const pane = map.getPane('boundaryPane');
@@ -26,13 +26,13 @@ const KMLLayer: React.FC<{ show: boolean }> = ({ show }) => {
       }
 
       const customLayer = L.geoJson(null, {
-        pane: 'boundaryPane', // Mengarahkan layer ke pane khusus
+        pane: 'boundaryPane',
         style: {
-          color: '#f97316', // Orange
+          color: '#f97316',
           weight: 4,
           dashArray: '5, 10',
           fillOpacity: 0,
-          interactive: false // Agar tidak menghalangi klik pada layer di bawahnya
+          interactive: false
         }
       });
 
@@ -74,14 +74,11 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap, showLandcover, showBoun
           zIndex={1}
         />
 
-        {/* Landcover Layer (zIndex 2) */}
-        {showLandcover && (
-          <TileLayer
-            url="https://lca-server.azurewebsites.net/api/rasters/lc/{z}/{y}/{x}?year=2024"
-            opacity={0.5}
-            zIndex={2}
-          />
-        )}
+        {/* GeoTIFF Landcover Layer (zIndex 2) */}
+        <GeoTIFFLayer 
+          show={!!showLandcover} 
+          url="./data/landcover.tif"
+        />
 
         {/* Mangrove GeoJSON (zIndex default ~400) */}
         {geoJsonData && (
