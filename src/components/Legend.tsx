@@ -12,13 +12,23 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
     boundary: {
       title: 'Batas Wilayah',
       items: [
-        { color: 'linear-gradient(to right, #f97316, #ea580c)', label: 'Batas Administrasi', pattern: 'dashed' as const }
+        { 
+          color: '#f97316', 
+          label: 'Batas Administrasi', 
+          pattern: 'dashed' as const,
+          weight: 3
+        }
       ]
     },
     mangrove: {
       title: 'Hutan Mangrove',
       items: [
-        { color: 'linear-gradient(to bottom right, #14b8a6, #059669)', label: 'Kawasan Mangrove', pattern: undefined }
+        { 
+          color: 'linear-gradient(to bottom right, #14b8a6, #059669)', 
+          label: 'Kawasan Mangrove', 
+          pattern: undefined,
+          weight: 1
+        }
       ]
     },
     landcover: {
@@ -108,7 +118,11 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
                         style={{
                           background: item.color,
                           ...(item.pattern === 'dashed' && {
-                            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(0,0,0,0.2) 4px, rgba(0,0,0,0.2) 8px)'
+                            backgroundImage: 'repeating-linear-gradient(90deg, #f97316 0, #f97316 8px, transparent 8px, transparent 16px)',
+                            backgroundSize: '100% 3px',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'repeat-x',
+                            border: 'none'
                           })
                         }}
                       />

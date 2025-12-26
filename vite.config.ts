@@ -24,5 +24,8 @@ export default defineConfig({
         }
       }
     }
-  }
+  },
+  
+  // Tambahan untuk fix MIME type issue di GitHub Pages
+  assetsInclude: ['**/*.geojson', '**/*.kml', '**/*.tif'],
 })
