@@ -8,9 +8,9 @@ const Layout: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const navLinks = [
-    { path: '/webgis', label: 'WebGIS', icon: '🗺️' },
-    { path: '/dokumen', label: 'Dokumen', icon: '📄' },
-    { path: '/tentang', label: 'Tentang', icon: 'ℹ️' },
+    { path: '/webgis', label: 'WebGIS'},
+    { path: '/dokumen', label: 'Dokumen'},
+    { path: '/tentang', label: 'Tentang'},
   ];
 
   return (
@@ -48,7 +48,6 @@ const Layout: React.FC = () => {
                       : 'text-gray-600 hover:bg-gray-100 hover:text-emerald-600'
                   }`}
                 >
-                  <span className="mr-2">{link.icon}</span>
                   {link.label}
                 </Link>
               ))}
@@ -87,7 +86,6 @@ const Layout: React.FC = () => {
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  <span className="mr-2">{link.icon}</span>
                   {link.label}
                 </Link>
               ))}
