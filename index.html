@@ -7,7 +7,14 @@
     <meta name="description" content="WebGIS Peta Persebaran Mangrove di Nunukan, Kalimantan Utara" />
     <title>WebGIS Mangrove Nunukan</title>
     
-    <!-- GeoRaster Dependencies -->
+    <!-- Load Leaflet CSS and JS first -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Load Proj4js (required dependency) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
+    
+    <!-- Load GeoRaster Dependencies AFTER Leaflet -->
     <script src="https://unpkg.com/georaster@1.6.0/dist/georaster.browser.bundle.min.js"></script>
     <script src="https://unpkg.com/georaster-layer-for-leaflet@3.10.0/dist/georaster-layer-for-leaflet.min.js"></script>
   </head>

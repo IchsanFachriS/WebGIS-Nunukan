@@ -1,12 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
-import 'georaster';
-import 'georaster-layer-for-leaflet';
 
 declare global {
   interface Window {
     parseGeoraster: any;
     GeoRasterLayer: any;
+    L: any;
   }
 }
 
@@ -19,6 +18,7 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
   const map = useMap();
   const layerRef = useRef<any>(null);
   const isLoadingRef = useRef(false);
+  const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Jika show false, hapus layer dan return
@@ -39,18 +39,31 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
       return;
     }
 
+    // Validasi dependencies
+    if (!window.parseGeoraster || !window.GeoRasterLayer) {
+      console.error('GeoRaster libraries not loaded properly');
+      setError('GeoRaster libraries tidak tersedia');
+      return;
+    }
+
     // Load GeoTIFF
     const loadGeoTIFF = async () => {
       isLoadingRef.current = true;
+      setError(null);
       
       try {
+        console.log('Loading GeoTIFF from:', url);
+        
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error('Failed to fetch GeoTIFF');
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const arrayBuffer = await response.arrayBuffer();
+        console.log('GeoTIFF downloaded, size:', arrayBuffer.byteLength);
+        
         const georaster = await window.parseGeoraster(arrayBuffer);
+        console.log('GeoRaster parsed successfully:', georaster);
 
         // Color mapping untuk klasifikasi
         const getColor = (value: number): string | null => {
@@ -81,10 +94,31 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
           });
 
           layerRef.current.addTo(map);
-          console.log('GeoTIFF layer added to map');
+          console.log('GeoTIFF layer added to map successfully');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error loading GeoTIFF:', error);
+        setError(error.message || 'Gagal memuat layer GeoTIFF');
+        
+        // Tampilkan notifikasi error ke user (optional)
+        if (map) {
+          const errorControl = window.L.control({ position: 'topright' });
+          errorControl.onAdd = function() {
+            const div = window.L.DomUtil.create('div', 'leaflet-control-geotiff-error');
+            div.innerHTML = `
+              <div style="background: rgba(239, 68, 68, 0.9); color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px; max-width: 250px;">
+                <strong>⚠️ Error:</strong> Gagal memuat layer Tutupan Lahan
+              </div>
+            `;
+            setTimeout(() => {
+              if (div.parentNode) {
+                div.parentNode.removeChild(div);
+              }
+            }, 5000);
+            return div;
+          };
+          errorControl.addTo(map);
+        }
       } finally {
         isLoadingRef.current = false;
       }
