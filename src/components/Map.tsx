@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import omnivore from 'leaflet-omnivore';
 import { MangroveGeoJSON } from '../types';
-import GeoTIFFLayer from './GeotiffLayer';
+import GeoTIFFLayer from './GeoTIFFLayer';
 import 'leaflet/dist/leaflet.css';
 
 interface MapProps {
