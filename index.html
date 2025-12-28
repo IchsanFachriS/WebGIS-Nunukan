@@ -17,6 +17,20 @@
     <!-- Load GeoRaster Dependencies AFTER Leaflet -->
     <script src="https://unpkg.com/georaster@1.6.0/dist/georaster.browser.bundle.min.js"></script>
     <script src="https://unpkg.com/georaster-layer-for-leaflet@3.10.0/dist/georaster-layer-for-leaflet.min.js"></script>
+    
+    <!-- Load GeoBlaze untuk identify pixel values -->
+    <script src="https://unpkg.com/geoblaze@2.8.0/dist/geoblaze.min.js"></script>
+    
+    <!-- GitHub Pages SPA redirect handler -->
+    <script>
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

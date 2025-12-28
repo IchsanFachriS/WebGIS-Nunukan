@@ -5,7 +5,11 @@ const Layout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    // Jika di root (/), anggap WebGIS aktif
+    if (location.pathname === '/' && path === '/webgis') return true;
+    return location.pathname === path;
+  };
 
   const navLinks = [
     { path: '/webgis', label: 'WebGIS'},
