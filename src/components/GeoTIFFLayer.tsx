@@ -97,7 +97,7 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
         if (show && !layerRef.current) {
           layerRef.current = new window.GeoRasterLayer({
             georaster: georaster,
-            opacity: 0.6,
+            opacity: 1,
             pixelValuesToColorFn: (values: number[]) => {
               const value = values[0];
               return getColor(value);

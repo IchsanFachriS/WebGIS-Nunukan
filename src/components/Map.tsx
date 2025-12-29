@@ -101,7 +101,7 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap, showLandcover = false, 
           <GeoJSON
             data={geoJsonData as any}
             style={() => ({
-              fillColor: 'darkgreen',
+              fillColor: '#00400E',
               weight: 1,
               opacity: 1,
               color: '#fff',
