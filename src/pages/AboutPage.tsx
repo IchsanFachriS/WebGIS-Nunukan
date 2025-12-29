@@ -13,25 +13,25 @@ const AboutPage: React.FC = () => {
     // Tim Dosen
     {
       name: 'Esa Fajar Hidayat, S.Kel., M.Si',
-      role: 'Ketua Tim',
+      role: 'Dosen',
       institution: 'Ilmu Kelautan UB',
       type: 'dosen',
     },
     {
       name: 'Dr. Prima Roza, S.E., M.Ed. Admin.',
-      role: 'Anggota Tim',
+      role: 'Dosen',
       institution: 'Ilmu-Ilmu Kemanusiaan FSRD ITB',
       type: 'dosen',
     },
     {
       name: 'Miga Magenika Julian, S.T, M.T.',
-      role: 'Anggota Tim',
+      role: 'Dosen',
       institution: 'KK Hidrografi FITB ITB',
       type: 'dosen',
     },
     // Tim Mahasiswa
     {
-      name: 'Wulan Larisa Olivia',
+      name: 'Alena Cansery',
       role: 'Mahasiswa',
       institution: 'Teknik Geodesi dan Geomatika – ITB',
       type: 'mahasiswa',
@@ -43,15 +43,16 @@ const AboutPage: React.FC = () => {
       type: 'mahasiswa',
     },
     {
+      name: 'Wulan Larisa Olivia',
+      role: 'Mahasiswa',
+      institution: 'Teknik Geodesi dan Geomatika – ITB',
+      type: 'mahasiswa',
+    },
+
+    {
       name: 'Desvi Prasanti',
       role: 'Mahasiswa',
       institution: 'Ilmu Kelautan – UB',
-      type: 'mahasiswa',
-    },
-    {
-      name: 'Alena Cansery',
-      role: 'Mahasiswa',
-      institution: 'Teknik Geodesi dan Geomatika – ITB',
       type: 'mahasiswa',
     },
   ];
@@ -156,7 +157,6 @@ const AboutPage: React.FC = () => {
                   
                   <div className="p-6">
                     <h4 className="text-lg font-bold text-white mb-2 tracking-tight">{member.name}</h4>
-                    <p className="text-sm text-teal-400 font-semibold mb-1">{member.role}</p>
                     <p className="text-sm text-slate-400">{member.institution}</p>
                   </div>
                 </div>
