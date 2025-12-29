@@ -28,7 +28,7 @@ export default defineConfig({
   
   // PENTING: Ganti 'WebGIS-Nunukan' dengan nama repository GitHub Anda
   // Format: '/nama-repository/'
-  base: '/',
+  base: '/WebGIS-Nunukan/',
   
   build: {
     outDir: 'dist',
