@@ -1,7 +1,8 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import LandingPage from './pages/LandingPage';
 import WebGISPage from './pages/WebGISPage';
 import DocumentPage from './pages/DocumentPage';
 import AboutPage from './pages/AboutPage';
@@ -11,17 +12,17 @@ const rootElement = document.getElementById('root');
 
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
+    <StrictMode>
       <BrowserRouter basename="/">
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<WebGISPage />} />
+            <Route index element={<LandingPage />} />
             <Route path="webgis" element={<WebGISPage />} />
             <Route path="dokumen" element={<DocumentPage />} />
             <Route path="tentang" element={<AboutPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
-    </React.StrictMode>,
+    </StrictMode>,
   );
 }

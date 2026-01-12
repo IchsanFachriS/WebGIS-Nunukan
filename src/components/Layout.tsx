@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 
-const Layout: React.FC = () => {
+const Layout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
   const isActive = (path: string) => {
-    // Jika di root (/), anggap WebGIS aktif
-    if (location.pathname === '/' && path === '/webgis') return true;
-    return location.pathname === path;
+    if (location.pathname === '/' && path === '/') return true;
+    if (path === '/') return false;
+    return location.pathname.startsWith(path);
   };
 
   const navLinks = [
-    { path: '/webgis', label: 'WebGIS'},
-    { path: '/dokumen', label: 'Dokumen'},
-    { path: '/tentang', label: 'Tentang'},
+    { path: '/', label: 'Beranda' },
+    { path: '/webgis', label: 'WebGIS' },
+    { path: '/dokumen', label: 'Dokumen' },
+    { path: '/tentang', label: 'Tentang' },
   ];
 
   return (
@@ -33,9 +34,9 @@ const Layout: React.FC = () => {
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent tracking-tight">
-                    SPACEMANGROVE
+                    WebGIS Srinanti
                   </h1>
-                  <p className="text-xs text-slate-400 tracking-wide">WebGIS Mangrove Nunukan</p>
+                  <p className="text-xs text-slate-400 tracking-wide">Sistem Informasi Geografis Desa</p>
                 </div>
               </Link>
             </div>
@@ -102,6 +103,52 @@ const Layout: React.FC = () => {
       <main>
         <Outlet />
       </main>
+
+      {/* Footer */}
+      <footer className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white py-12 border-t border-teal-500/20">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* About */}
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-teal-400">WebGIS Srinanti</h3>
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Platform Sistem Informasi Geografis untuk pemetaan dan pengelolaan data spasial Desa Srinanti.
+              </p>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-teal-400">Tautan Cepat</h3>
+              <ul className="space-y-2">
+                {navLinks.map((link) => (
+                  <li key={link.path}>
+                    <Link 
+                      to={link.path}
+                      className="text-slate-300 hover:text-teal-400 transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-teal-400">Kontak</h3>
+              <div className="space-y-2 text-sm text-slate-300">
+                <p>Desa Srinanti</p>
+                <p>Kabupaten, Provinsi</p>
+                <p>Email: info@srinanti.desa.id</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-700 mt-8 pt-8 text-center text-sm text-slate-400">
+            <p>&copy; {new Date().getFullYear()} WebGIS Desa Srinanti. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

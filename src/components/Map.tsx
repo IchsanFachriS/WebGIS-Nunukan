@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import omnivore from 'leaflet-omnivore';
 import { MangroveGeoJSON } from '../types';
 import GeoTIFFLayer from './GeoTIFFLayer';
 import 'leaflet/dist/leaflet.css';
@@ -13,54 +12,83 @@ interface MapProps {
   showBoundary?: boolean;
 }
 
-const KMLLayer: React.FC<{ show: boolean }> = ({ show }) => {
+const BoundaryLayer: React.FC<{ show: boolean }> = ({ show }) => {
   const map = useMap();
-  const kmlLayerRef = useRef<L.LayerGroup | null>(null);
+  const [boundaryData, setBoundaryData] = useState<any>(null);
+  const layerRef = useRef<L.GeoJSON | null>(null);
 
   useEffect(() => {
-    // Hapus layer lama jika ada
-    if (kmlLayerRef.current) {
-      map.removeLayer(kmlLayerRef.current);
-      kmlLayerRef.current = null;
+    // Load GeoJSON data
+    fetch('./data/batas_wilayah.geojson')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to load boundary GeoJSON');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setBoundaryData(data);
+      })
+      .catch((error) => {
+        console.error('Error loading boundary GeoJSON:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Remove existing layer
+    if (layerRef.current) {
+      map.removeLayer(layerRef.current);
+      layerRef.current = null;
     }
 
-    if (!show) return;
+    if (!show || !boundaryData) return;
 
-    // Buat pane khusus untuk boundary agar berada di atas
+    // Create pane for boundary layer
     if (!map.getPane('boundaryPane')) {
       map.createPane('boundaryPane');
       const pane = map.getPane('boundaryPane');
-      if (pane) pane.style.zIndex = '650'; 
+      if (pane) pane.style.zIndex = '650';
     }
 
-    const customLayer = L.geoJson(null, {
+    // Add boundary layer
+    layerRef.current = L.geoJSON(boundaryData, {
       pane: 'boundaryPane',
       style: {
         color: '#f97316', // Orange
         weight: 3,
         opacity: 1,
-        dashArray: '8, 12', // Pola garis putus-putus yang lebih jelas
+        dashArray: '8, 12',
         fillOpacity: 0,
-        interactive: false
-      }
-    });
-
-    kmlLayerRef.current = omnivore.kml('./data/batas_wilayah.kml', null, customLayer)
-      .on('ready', function(this: any) {
-        console.log('KML Boundary loaded');
-      })
-      .on('error', function(e: any) {
-        console.error('Error loading KML:', e);
-      })
-      .addTo(map);
+      },
+      onEachFeature: (feature, layer) => {
+        if (feature.properties) {
+          const props = feature.properties;
+          const popupContent = `
+            <div style="font-family: sans-serif; min-width: 200px;">
+              <h3 style="margin: 0 0 8px 0; color: #f97316; font-size: 14px; font-weight: bold;">
+                ${props.DESA || 'Batas Wilayah'}
+              </h3>
+              <div style="font-size: 12px; line-height: 1.6;">
+                <p style="margin: 4px 0;"><strong>Kecamatan:</strong> ${props.KECAMATAN || '-'}</p>
+                <p style="margin: 4px 0;"><strong>Kabupaten:</strong> ${props.KAB_KOTA || '-'}</p>
+                <p style="margin: 4px 0;"><strong>Provinsi:</strong> ${props.PROVINSI || '-'}</p>
+                ${props.LUAS_WILAY ? `<p style="margin: 4px 0;"><strong>Luas:</strong> ${props.LUAS_WILAY} km²</p>` : ''}
+                ${props.JUMLAH_PEN ? `<p style="margin: 4px 0;"><strong>Jumlah Penduduk:</strong> ${props.JUMLAH_PEN.toLocaleString()}</p>` : ''}
+              </div>
+            </div>
+          `;
+          layer.bindPopup(popupContent);
+        }
+      },
+    }).addTo(map);
 
     return () => {
-      if (kmlLayerRef.current) {
-        map.removeLayer(kmlLayerRef.current);
-        kmlLayerRef.current = null;
+      if (layerRef.current) {
+        map.removeLayer(layerRef.current);
+        layerRef.current = null;
       }
     };
-  }, [show, map]);
+  }, [show, boundaryData, map]);
 
   return null;
 };
@@ -88,7 +116,7 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap, showLandcover = false, 
           attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
         />
 
-        {/* GeoTIFF Landcover Layer - PENTING: Hanya tampil jika showLandcover true */}
+        {/* GeoTIFF Landcover Layer */}
         {showLandcover && (
           <GeoTIFFLayer 
             show={true} 
@@ -128,8 +156,8 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap, showLandcover = false, 
           />
         )}
 
-        {/* Boundary KML (zIndex 650 via Pane - Paling Atas) */}
-        <KMLLayer show={showBoundary} />
+        {/* Boundary GeoJSON (zIndex 650 via Pane - Paling Atas) */}
+        <BoundaryLayer show={showBoundary} />
       </MapContainer>
     </div>
   );

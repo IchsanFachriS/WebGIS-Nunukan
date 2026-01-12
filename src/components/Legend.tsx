@@ -14,7 +14,7 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
       items: [
         { 
           color: '#f97316', 
-          label: 'Batas Administrasi', 
+          label: 'Batas Administrasi Desa Srinanti', 
           pattern: 'dashed' as const,
           weight: 3
         }

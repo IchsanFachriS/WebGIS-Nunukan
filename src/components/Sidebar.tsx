@@ -11,7 +11,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle, visibleLayers, onLa
   const layers = [
     { 
       id: 'boundary', 
-      name: 'Batas Wilayah Administrasi',
+      name: 'Batas Wilayah Administrasi Desa SriNanti',
       description: 'Sumber: Google Satellite',
       color: 'text-amber-400'
     },
