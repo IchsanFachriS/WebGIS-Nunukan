@@ -145,10 +145,10 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { icon: MapPin, value: '±50', label: 'Hektar' },
-              { icon: Users, value: '500+', label: 'Penduduk' },
-              { icon: FileText, value: '20+', label: 'Layer Peta' },
-              { icon: Camera, value: '100+', label: 'Data Spasial' }
+              { icon: MapPin, value: '1,05', label: 'km²' },
+              { icon: Users, value: '4.985 ha', label: 'Mangrove yang Dikelola' },
+              { icon: FileText, value: '12', label: 'Rukun Tetangga' },
+              { icon: Camera, value: '2.750', label: 'Jiwa (BPS 2019)' }
             ].map((stat, index) => (
               <div 
                 key={index}
