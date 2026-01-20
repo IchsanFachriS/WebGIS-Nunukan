@@ -6,14 +6,13 @@ const Layout = () => {
   const location = useLocation();
 
   const isActive = (path: string) => {
-    if (location.pathname === '/' && path === '/') return true;
-    if (path === '/') return false;
-    return location.pathname.startsWith(path);
+    return location.pathname === path;
   };
 
   const navLinks = [
     { path: '/', label: 'Beranda' },
     { path: '/webgis', label: 'WebGIS' },
+    { path: '/spesies-karbon', label: 'Spesies & Karbon' },
     { path: '/dokumen', label: 'Dokumen' },
     { path: '/tentang', label: 'Tentang' },
   ];
@@ -21,7 +20,7 @@ const Layout = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <nav className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-xl sticky top-0 z-50 border-b border-teal-500/20">
+      <nav className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-xl fixed top-0 left-0 right-0 z-50 border-b border-teal-500/20">
         <div className="max-w-[95%] 2xl:max-w-[1600px] mx-auto px-8 lg:px-12">
           <div className="flex justify-between h-20">
             {/* Logo & Brand */}
@@ -100,7 +99,7 @@ const Layout = () => {
       </nav>
 
       {/* Main Content */}
-      <main>
+      <main className="pt-20">
         <Outlet />
       </main>
 

@@ -54,7 +54,7 @@ const WebGISPage: React.FC = () => {
   }
 
   return (
-    <div className="flex h-[calc(100vh-5rem)] overflow-hidden bg-slate-900">
+    <div className="flex h-screen overflow-hidden bg-slate-900">
       <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -62,7 +62,8 @@ const WebGISPage: React.FC = () => {
         onLayerToggle={handleLayerToggle}
       />
 
-      <div className="flex-1 relative">
+      <div className="flex-1 relative h-screen">
+        {/* Basemap Switcher - Fixed terhadap map */}
         <div className="absolute top-6 right-6 z-[1000]">
           <div className="bg-slate-800/90 backdrop-blur-md p-1.5 rounded-2xl shadow-xl border border-teal-500/20 flex gap-1">
             <button
@@ -84,15 +85,18 @@ const WebGISPage: React.FC = () => {
           </div>
         </div>
 
-        <Map 
-          geoJsonData={visibleLayers.mangrove ? geoJsonData : null} 
-          basemap={basemap}
-          showLandcover={visibleLayers.landcover}
-          showBoundary={visibleLayers.boundary}
-        />
+        {/* Map Container - Full Height */}
+        <div className="w-full h-full">
+          <Map 
+            geoJsonData={visibleLayers.mangrove ? geoJsonData : null} 
+            basemap={basemap}
+            showLandcover={visibleLayers.landcover}
+            showBoundary={visibleLayers.boundary}
+          />
+        </div>
 
-        {/* Legenda Dinamis - Pass visibleLayers sebagai prop */}
-        <div className="fixed right-4 bottom-12 z-[900]">
+        {/* Legend - Fixed terhadap map, tidak ikut scroll */}
+        <div className="absolute right-4 bottom-4 z-[900]">
           <Legend visibleLayers={visibleLayers} />
         </div>
       </div>

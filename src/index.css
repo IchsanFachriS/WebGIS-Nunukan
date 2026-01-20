@@ -73,3 +73,20 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #0d9488, #0c4a6e);
 }
+
+/* Fix untuk WebGIS Page - Prevent scrolling */
+.webgis-container {
+  position: fixed;
+  top: 80px; /* Height of navbar */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+/* Leaflet Container Full Height */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}

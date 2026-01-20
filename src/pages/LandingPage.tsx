@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Camera, MapPin, Users, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
 
@@ -56,6 +58,24 @@ const LandingPage = () => {
     setCurrentSlide((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
   };
 
+  // Handler untuk navigasi ke halaman WebGIS
+  const handleNavigateToWebGIS = () => {
+    navigate('/webgis');
+  };
+
+  // Handler untuk navigasi ke halaman Dokumen
+  const handleNavigateToDocument = () => {
+    navigate('/dokumen');
+  };
+
+  // Handler untuk scroll ke section tentang
+  const handleScrollToAbout = () => {
+    const aboutSection = document.getElementById('tentang');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Hero Section */}
@@ -71,25 +91,37 @@ const LandingPage = () => {
         
         {/* Hero Content */}
         <div className="relative z-10 text-center text-white px-4 max-w-5xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in-down">
-            WebGIS Desa Srinanti
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 animate-fade-in-down tracking-tight" 
+              style={{ 
+                fontFamily: "'Sora', 'Outfit', sans-serif",
+                textShadow: '0 4px 12px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2)',
+                letterSpacing: '-0.02em'
+              }}>
+            <span className="bg-gradient-to-r from-white via-teal-100 to-emerald-200 bg-clip-text text-transparent">
+              WebGIS Desa Srinanti
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 animate-fade-in-up max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl mb-8 animate-fade-in-up max-w-3xl mx-auto leading-relaxed font-light"
+             style={{ 
+               fontFamily: "'Outfit', 'Inter', sans-serif",
+               textShadow: '0 2px 8px rgba(0,0,0,0.4)',
+               letterSpacing: '0.01em'
+             }}>
             Platform Sistem Informasi Geografis untuk Pemetaan dan Pengelolaan Data Spasial Desa Srinanti
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
-            <a 
-              href="#webgis" 
+            <button 
+              onClick={handleNavigateToWebGIS}
               className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-teal-500/50"
             >
               Lihat Peta WebGIS
-            </a>
-            <a 
-              href="#tentang" 
+            </button>
+            <button 
+              onClick={handleScrollToAbout}
               className="bg-transparent border-2 border-white hover:bg-white hover:text-slate-900 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300"
             >
               Tentang Desa
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -240,13 +272,13 @@ const LandingPage = () => {
 
           {/* View All Button */}
           <div className="text-center mt-8">
-            <a 
-              href="#dokumentasi"
+            <button 
+              onClick={handleNavigateToDocument}
               className="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 font-semibold transition-colors"
             >
               Lihat Semua Dokumentasi
               <ChevronRight className="w-5 h-5" />
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -309,12 +341,12 @@ const LandingPage = () => {
           <p className="text-xl mb-8 opacity-90">
             Akses informasi geografis lengkap dan terkini dari Desa Srinanti
           </p>
-          <a 
-            href="#webgis"
+          <button 
+            onClick={handleNavigateToWebGIS}
             className="inline-block bg-teal-600 hover:bg-teal-700 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-teal-500/50"
           >
             Mulai Eksplorasi WebGIS
-          </a>
+          </button>
         </div>
       </section>
 
@@ -366,4 +398,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage; 
+export default LandingPage;
