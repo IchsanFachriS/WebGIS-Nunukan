@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { MangroveGeoJSON } from '../types';
 import GeoTIFFLayer from './GeoTIFFLayer';
+import OrthophotoLayer from './OrthophotoLayer';
 import 'leaflet/dist/leaflet.css';
 
 interface MapProps {
@@ -10,6 +11,7 @@ interface MapProps {
   basemap: 'satellite' | 'street';
   showLandcover?: boolean;
   showBoundary?: boolean;
+  showOrthophoto?: boolean;
 }
 
 const BoundaryLayer: React.FC<{ show: boolean }> = ({ show }) => {
@@ -18,7 +20,6 @@ const BoundaryLayer: React.FC<{ show: boolean }> = ({ show }) => {
   const layerRef = useRef<L.GeoJSON | null>(null);
 
   useEffect(() => {
-    // Load GeoJSON data
     fetch('./data/batas_wilayah.geojson')
       .then((response) => {
         if (!response.ok) {
@@ -35,7 +36,6 @@ const BoundaryLayer: React.FC<{ show: boolean }> = ({ show }) => {
   }, []);
 
   useEffect(() => {
-    // Remove existing layer
     if (layerRef.current) {
       map.removeLayer(layerRef.current);
       layerRef.current = null;
@@ -43,18 +43,16 @@ const BoundaryLayer: React.FC<{ show: boolean }> = ({ show }) => {
 
     if (!show || !boundaryData) return;
 
-    // Create pane for boundary layer
     if (!map.getPane('boundaryPane')) {
       map.createPane('boundaryPane');
       const pane = map.getPane('boundaryPane');
       if (pane) pane.style.zIndex = '650';
     }
 
-    // Add boundary layer
     layerRef.current = L.geoJSON(boundaryData, {
       pane: 'boundaryPane',
       style: {
-        color: '#f97316', // Orange
+        color: '#f97316',
         weight: 3,
         opacity: 1,
         dashArray: '8, 12',
@@ -93,7 +91,13 @@ const BoundaryLayer: React.FC<{ show: boolean }> = ({ show }) => {
   return null;
 };
 
-const Map: React.FC<MapProps> = ({ geoJsonData, basemap, showLandcover = false, showBoundary = false }) => {
+const Map: React.FC<MapProps> = ({ 
+  geoJsonData, 
+  basemap, 
+  showLandcover = false, 
+  showBoundary = false,
+  showOrthophoto = false 
+}) => {
   return (
     <div className="w-full h-full bg-gray-200">
       <MapContainer
@@ -102,7 +106,7 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap, showLandcover = false, 
         className="w-full h-full"
         zoomControl={false}
       >
-        {/* Base Layers (zIndex rendah) */}
+        {/* Base Layers (zIndex 1) */}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           opacity={basemap === 'street' ? 1 : 0}
@@ -116,11 +120,20 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap, showLandcover = false, 
           attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
         />
 
-        {/* GeoTIFF Landcover Layer */}
+        {/* GeoTIFF Landcover Layer (zIndex default ~200) */}
         {showLandcover && (
           <GeoTIFFLayer 
             show={true} 
             url="./data/landcover.tif"
+          />
+        )}
+
+        {/* Orthofoto Layer dari MapTiler (zIndex 300 - via pane) */}
+        {showOrthophoto && (
+          <OrthophotoLayer
+            show={true}
+            tileUrl="https://api.maptiler.com/tiles/019bdf3c-bab9-7f60-a89c-0eb5b3915741/{z}/{x}/{y}.png?key=eEVS9pTGeOsrG57V9SUj"
+            opacity={0.85}
           />
         )}
 
@@ -156,7 +169,7 @@ const Map: React.FC<MapProps> = ({ geoJsonData, basemap, showLandcover = false, 
           />
         )}
 
-        {/* Boundary GeoJSON (zIndex 650 via Pane - Paling Atas) */}
+        {/* Boundary GeoJSON (zIndex 650 - Paling Atas) */}
         <BoundaryLayer show={showBoundary} />
       </MapContainer>
     </div>

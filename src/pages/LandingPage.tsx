@@ -84,7 +84,7 @@ const LandingPage = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600)',
+            backgroundImage: 'url(/background.JPG)',
             filter: 'brightness(0.4)'
           }}
         />
@@ -98,7 +98,7 @@ const LandingPage = () => {
                 letterSpacing: '-0.02em'
               }}>
             <span className="bg-gradient-to-r from-white via-teal-100 to-emerald-200 bg-clip-text text-transparent">
-              WebGIS Desa Srinanti
+              SPACEMANGROVE
             </span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 animate-fade-in-up max-w-3xl mx-auto leading-relaxed font-light"
@@ -107,7 +107,7 @@ const LandingPage = () => {
                textShadow: '0 2px 8px rgba(0,0,0,0.4)',
                letterSpacing: '0.01em'
              }}>
-            Platform Sistem Informasi Geografis untuk Pemetaan dan Pengelolaan Data Spasial Desa Srinanti
+            Platform Sistem Informasi Geografis untuk Pemetaan Mangrove Desa Srinanti
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
             <button 

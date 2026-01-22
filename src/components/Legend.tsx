@@ -16,7 +16,20 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
           color: '#f97316', 
           label: 'Batas Administrasi Desa Srinanti', 
           pattern: 'dashed' as const,
-          weight: 3
+          weight: 3,
+          isImage: false
+        }
+      ]
+    },
+    orthophoto: {
+      title: 'Orthofoto Drone',
+      items: [
+        { 
+          color: 'linear-gradient(135deg, #a78bfa 0%, #ec4899 100%)', 
+          label: 'Foto Udara Resolusi Tinggi', 
+          pattern: undefined,
+          weight: 1,
+          isImage: true
         }
       ]
     },
@@ -27,22 +40,23 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
           color: 'linear-gradient(to bottom right, #14b8a6, #059669)', 
           label: 'Kawasan Mangrove', 
           pattern: undefined,
-          weight: 1
+          weight: 1,
+          isImage: false
         }
       ]
     },
     landcover: {
       title: 'Tutupan Lahan 2024',
       items: [
-        { color: '#0000FF', label: 'Air', pattern: undefined },
-        { color: '#00FF00', label: 'Vegetasi', pattern: undefined },
-        { color: '#90EE90', label: 'Vegetasi Terendam Air', pattern: undefined },
-        { color: '#32CD32', label: 'Tanaman', pattern: undefined },
-        { color: '#FF0000', label: 'Area Terbangun', pattern: undefined },
-        { color: '#D2691E', label: 'Tanah Kosong', pattern: undefined },
-        { color: '#FFFFFF', label: 'Salju/Es', pattern: undefined },
-        { color: '#CCCCCC', label: 'Awan', pattern: undefined },
-        { color: '#ADFF2F', label: 'Padang Rumput', pattern: undefined }
+        { color: '#0000FF', label: 'Air', pattern: undefined, isImage: false },
+        { color: '#00FF00', label: 'Vegetasi', pattern: undefined, isImage: false },
+        { color: '#90EE90', label: 'Vegetasi Terendam Air', pattern: undefined, isImage: false },
+        { color: '#32CD32', label: 'Tanaman', pattern: undefined, isImage: false },
+        { color: '#FF0000', label: 'Area Terbangun', pattern: undefined, isImage: false },
+        { color: '#D2691E', label: 'Tanah Kosong', pattern: undefined, isImage: false },
+        { color: '#FFFFFF', label: 'Salju/Es', pattern: undefined, isImage: false },
+        { color: '#CCCCCC', label: 'Awan', pattern: undefined, isImage: false },
+        { color: '#ADFF2F', label: 'Padang Rumput', pattern: undefined, isImage: false }
       ]
     }
   };
@@ -113,19 +127,28 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
                 <div className="space-y-2">
                   {legend.items.map((item, index) => (
                     <div key={index} className="flex items-center space-x-3 group">
-                      <div 
-                        className={`w-5 h-5 rounded shadow-sm group-hover:scale-110 transition-transform flex-shrink-0`}
-                        style={{
-                          background: item.color,
-                          ...(item.pattern === 'dashed' && {
-                            backgroundImage: 'repeating-linear-gradient(90deg, #f97316 0, #f97316 8px, transparent 8px, transparent 16px)',
-                            backgroundSize: '100% 3px',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'repeat-x',
-                            border: 'none'
-                          })
-                        }}
-                      />
+                      {item.isImage ? (
+                        // Untuk orthofoto, tampilkan icon khusus
+                        <div className="w-5 h-5 rounded shadow-sm group-hover:scale-110 transition-transform flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500">
+                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      ) : (
+                        <div 
+                          className={`w-5 h-5 rounded shadow-sm group-hover:scale-110 transition-transform flex-shrink-0`}
+                          style={{
+                            background: item.color,
+                            ...(item.pattern === 'dashed' && {
+                              backgroundImage: 'repeating-linear-gradient(90deg, #f97316 0, #f97316 8px, transparent 8px, transparent 16px)',
+                              backgroundSize: '100% 3px',
+                              backgroundPosition: 'center',
+                              backgroundRepeat: 'repeat-x',
+                              border: 'none'
+                            })
+                          }}
+                        />
+                      )}
                       <span className="text-xs font-medium text-slate-200 leading-tight">
                         {item.label}
                       </span>

@@ -227,7 +227,7 @@ const SpeciesCarbonPage: React.FC = () => {
                 Top 5 Penyerap Karbon
               </h3>
               <div className="space-y-4">
-                {top5Species.map((species, index) => (
+                {top5Species.map((species) => (
                   <div key={species.id} className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium text-gray-700">{species.name}</span>
