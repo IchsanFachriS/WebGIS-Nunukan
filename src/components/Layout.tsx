@@ -13,7 +13,8 @@ const Layout = () => {
 
   const navLinks = [
     { path: '/', label: 'Beranda' },
-    { path: '/webgis', label: 'WebGIS' },
+    { path: '/peta-amenitas', label: 'Peta Amenitas Wisata' },
+    { path: '/peta-ekowisata', label: 'Peta Ekowisata Mangrove' },
     { path: '/spesies-karbon', label: 'Spesies & Karbon' },
     { path: '/dokumen', label: 'Dokumen' },
     { path: '/tentang', label: 'Tentang' },
@@ -168,9 +169,9 @@ const Layout = () => {
             <div>
               <h3 className="text-xl font-bold mb-4 text-teal-400">Kontak</h3>
               <div className="space-y-2 text-sm text-slate-300">
-                <p>Desa Srinanti</p>
-                <p>Kabupaten, Provinsi</p>
-                <p>Email: info@srinanti.desa.id</p>
+                <p>Desa Srinanti, Kecamatan Sei Menggaris</p>
+                <p>Kabupaten Nunukan, Provinsi Kalimantan Utara</p>
+                <p>Instagram: @XXXXXXXX</p>
               </div>
             </div>
           </div>

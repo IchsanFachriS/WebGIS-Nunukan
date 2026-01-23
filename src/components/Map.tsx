@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap, ScaleControl } from 'react-leaflet';
 import L from 'leaflet';
 import { MangroveGeoJSON } from '../types';
 import GeoTIFFLayer from './GeoTIFFLayer';
@@ -20,7 +20,7 @@ const BoundaryLayer: React.FC<{ show: boolean }> = ({ show }) => {
   const layerRef = useRef<L.GeoJSON | null>(null);
 
   useEffect(() => {
-    fetch('./data/batas_wilayah.geojson')
+    fetch('./data/rute_susur_mangrove.geojson')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to load boundary GeoJSON');
@@ -64,15 +64,8 @@ const BoundaryLayer: React.FC<{ show: boolean }> = ({ show }) => {
           const popupContent = `
             <div style="font-family: sans-serif; min-width: 200px;">
               <h3 style="margin: 0 0 8px 0; color: #f97316; font-size: 14px; font-weight: bold;">
-                ${props.DESA || 'Batas Wilayah'}
+                ${props.DESA || 'Rute Susur Mangrove'}
               </h3>
-              <div style="font-size: 12px; line-height: 1.6;">
-                <p style="margin: 4px 0;"><strong>Kecamatan:</strong> ${props.KECAMATAN || '-'}</p>
-                <p style="margin: 4px 0;"><strong>Kabupaten:</strong> ${props.KAB_KOTA || '-'}</p>
-                <p style="margin: 4px 0;"><strong>Provinsi:</strong> ${props.PROVINSI || '-'}</p>
-                ${props.LUAS_WILAY ? `<p style="margin: 4px 0;"><strong>Luas:</strong> ${props.LUAS_WILAY} km²</p>` : ''}
-                ${props.JUMLAH_PEN ? `<p style="margin: 4px 0;"><strong>Jumlah Penduduk:</strong> ${props.JUMLAH_PEN.toLocaleString()}</p>` : ''}
-              </div>
             </div>
           `;
           layer.bindPopup(popupContent);
@@ -106,6 +99,9 @@ const Map: React.FC<MapProps> = ({
         className="w-full h-full"
         zoomControl={false}
       >
+        {/* Scale Control */}
+        <ScaleControl position="bottomleft" imperial={false} />
+
         {/* Base Layers (zIndex 1) */}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

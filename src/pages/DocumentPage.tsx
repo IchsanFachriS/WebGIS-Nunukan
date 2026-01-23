@@ -14,10 +14,10 @@ const DocumentPage: React.FC = () => {
     {
       id: '1',
       title: 'Modul Pengabdian Masyarakat',
-      description: 'Modul lengkap mengenai kegiatan pengabdian masyarakat pemetaan mangrove di Nunukan, Kalimantan Utara',
-      filename: 'Modul_Pengabdian_Masyarakat.pdf',
-      size: '2.5 MB',
-      date: 'Desember 2024',
+      description: 'Modul kegiatan pengabdian masyarakat pemetaan mangrove di Desa Srinanti',
+      filename: 'modul_pengmas_srinanti_2026.pdf',
+      size: '45.0 MB',
+      date: 'Desember 2025',
     },
   ];
 

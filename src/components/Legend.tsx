@@ -21,18 +21,6 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
         }
       ]
     },
-    orthophoto: {
-      title: 'Orthofoto Drone',
-      items: [
-        { 
-          color: 'linear-gradient(135deg, #a78bfa 0%, #ec4899 100%)', 
-          label: 'Foto Udara Resolusi Tinggi', 
-          pattern: undefined,
-          weight: 1,
-          isImage: true
-        }
-      ]
-    },
     mangrove: {
       title: 'Hutan Mangrove',
       items: [

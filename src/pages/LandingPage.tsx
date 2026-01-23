@@ -10,16 +10,16 @@ const LandingPage = () => {
   // Data untuk gallery slider
   const galleryImages = [
     {
-      url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200',
-      caption: 'Pemandangan Desa Srinanti'
+      url: '/foto-2.JPG',
+      caption: ''
     },
     {
-      url: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=1200',
-      caption: 'Aktivitas Pertanian Masyarakat'
+      url: '/foto-3.jpeg',
+      caption: ''
     },
     {
-      url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1200',
-      caption: 'Infrastruktur Desa'
+      url: '/foto-4.jpeg',
+      caption: ''
     }
   ];
 
@@ -58,15 +58,19 @@ const LandingPage = () => {
     setCurrentSlide((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
   };
 
-  // Handler untuk navigasi ke halaman WebGIS
-  const handleNavigateToWebGIS = () => {
-    navigate('/webgis');
+  // Handler untuk navigasi ke halaman Peta
+  const handleNavigateToPetaAmenitas = () => {
+    navigate('/peta-amenitas');
   };
 
-  // Handler untuk navigasi ke halaman Dokumen
-  const handleNavigateToDocument = () => {
-    navigate('/dokumen');
+  const handleNavigateToPetaEkowisata = () => {
+    navigate('/peta-ekowisata');
   };
+
+  // // Handler untuk navigasi ke halaman Dokumen
+  // const handleNavigateToDocument = () => {
+  //   navigate('/dokumen');
+  // };
 
   // Handler untuk scroll ke section tentang
   const handleScrollToAbout = () => {
@@ -84,14 +88,14 @@ const LandingPage = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(/background.JPG)',
+            backgroundImage: 'url(/background.jpeg)',
             filter: 'brightness(0.4)'
           }}
         />
         
         {/* Hero Content */}
         <div className="relative z-10 text-center text-white px-4 max-w-5xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 animate-fade-in-down tracking-tight" 
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-6 animate-fade-in-down tracking-tight" 
               style={{ 
                 fontFamily: "'Sora', 'Outfit', sans-serif",
                 textShadow: '0 4px 12px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2)',
@@ -101,7 +105,7 @@ const LandingPage = () => {
               SPACEMANGROVE
             </span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 animate-fade-in-up max-w-3xl mx-auto leading-relaxed font-light"
+          <p className="text-lg sm:text-xl md:text-2xl mb-8 animate-fade-in-up max-w-3xl mx-auto leading-relaxed font-light"
              style={{ 
                fontFamily: "'Outfit', 'Inter', sans-serif",
                textShadow: '0 2px 8px rgba(0,0,0,0.4)',
@@ -111,14 +115,14 @@ const LandingPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
             <button 
-              onClick={handleNavigateToWebGIS}
-              className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-teal-500/50"
+              onClick={handleNavigateToPetaEkowisata}
+              className="bg-teal-600 hover:bg-teal-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-teal-500/50 text-sm sm:text-base"
             >
-              Lihat Peta WebGIS
+              Peta Ekowisata Mangrove
             </button>
             <button 
               onClick={handleScrollToAbout}
-              className="bg-transparent border-2 border-white hover:bg-white hover:text-slate-900 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300"
+              className="bg-transparent border-2 border-white hover:bg-white hover:text-slate-900 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base"
             >
               Tentang Desa
             </button>
@@ -127,9 +131,9 @@ const LandingPage = () => {
       </section>
 
       {/* About Section */}
-      <section id="tentang" className="py-20 px-4 md:px-8">
+      <section id="tentang" className="py-12 sm:py-16 md:py-20 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Image */}
             <div 
               id="about-image"
@@ -139,9 +143,9 @@ const LandingPage = () => {
               }`}
             >
               <img 
-                src="https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800" 
+                src="/foto-1.jpeg" 
                 alt="Desa Srinanti"
-                className="w-full h-96 object-cover"
+                className="w-full h-64 sm:h-80 md:h-96 object-cover"
               />
             </div>
             
@@ -153,18 +157,18 @@ const LandingPage = () => {
                 isVisible['about-content'] ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
               }`}
             >
-              <h2 className="text-4xl font-bold text-slate-800 mb-6">
+              <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4 sm:mb-6">
                 Tentang Desa Srinanti
               </h2>
-              <div className="space-y-4 text-slate-600 leading-relaxed">
+              <div className="space-y-4 text-slate-600 leading-relaxed text-sm sm:text-base">
                 <p>
-                  Desa Srinanti merupakan salah satu desa yang terletak di wilayah Kabupaten yang memiliki potensi besar dalam pengembangan wilayah berbasis data spasial.
+                  Desa Srinanti merupakan salah satu desa yang terletak di Kecamatan Sei Menggaris, Kabupaten Nunukan, Kalimantan Utara yang memiliki potensi besar dalam pengembangan kawasan ekowisata mangrove.
                 </p>
                 <p>
-                  Melalui platform WebGIS ini, kami menyediakan akses informasi geografis yang komprehensif meliputi data administrasi, penggunaan lahan, infrastruktur, dan potensi desa yang dapat dimanfaatkan untuk perencanaan dan pengambilan keputusan yang lebih baik.
+                  Melalui platform WebGIS ini, kami menyediakan akses informasi geografis yang komprehensif meliputi kawasan mangrove, penggunaan lahan, dan infrastruktur pendukung desa yang dapat dimanfaatkan untuk perencanaan dan pengambilan keputusan yang lebih baik.
                 </p>
                 <p>
-                  WebGIS Desa Srinanti dikembangkan dengan teknologi modern untuk memudahkan masyarakat, pemerintah desa, dan stakeholder terkait dalam mengakses informasi spasial secara real-time dan interaktif.
+                  WebGIS Desa Srinanti dikembangkan dengan teknologi modern untuk memudahkan masyarakat, pemerintah desa, dan stakeholder terkait dalam mengakses informasi spasial secara interaktif.
                 </p>
               </div>
             </div>
@@ -173,11 +177,11 @@ const LandingPage = () => {
       </section>
 
       {/* Statistics Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-teal-600 to-blue-600">
+      <section className="py-12 sm:py-16 md:py-20 px-4 bg-gradient-to-r from-teal-600 to-blue-600">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {[
-              { icon: MapPin, value: '1,05', label: 'km²' },
+              { icon: MapPin, value: '1,05 km²', label: 'Luas Desa (BPS 2019)' },
               { icon: Users, value: '4.985 ha', label: 'Mangrove yang Dikelola' },
               { icon: FileText, value: '12', label: 'Rukun Tetangga' },
               { icon: Camera, value: '2.750', label: 'Jiwa (BPS 2019)' }
@@ -190,13 +194,13 @@ const LandingPage = () => {
                   isVisible[`stat-${index}`] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
               >
-                <div className="flex justify-center mb-4">
-                  <div className="bg-white/20 backdrop-blur-sm p-4 rounded-2xl">
-                    <stat.icon className="w-10 h-10" />
+                <div className="flex justify-center mb-3 sm:mb-4">
+                  <div className="bg-white/20 backdrop-blur-sm p-3 sm:p-4 rounded-2xl">
+                    <stat.icon className="w-8 h-8 sm:w-10 sm:h-10" />
                   </div>
                 </div>
-                <div className="text-4xl md:text-5xl font-bold mb-2">{stat.value}</div>
-                <div className="text-lg opacity-90">{stat.label}</div>
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-1 sm:mb-2">{stat.value}</div>
+                <div className="text-sm sm:text-base md:text-lg opacity-90">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -204,18 +208,18 @@ const LandingPage = () => {
       </section>
 
       {/* Gallery Section */}
-      <section className="py-20 px-4 md:px-8">
+      <section className="py-12 sm:py-16 md:py-20 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center text-slate-800 mb-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center text-slate-800 mb-3 sm:mb-4">
             Galeri Desa Srinanti
           </h2>
-          <p className="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
+          <p className="text-center text-slate-600 mb-8 sm:mb-12 max-w-2xl mx-auto text-sm sm:text-base">
             Lihat dokumentasi visual dari berbagai sudut Desa Srinanti
           </p>
           
           {/* Gallery Slider */}
           <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-            <div className="relative h-96 md:h-[500px]">
+            <div className="relative h-64 sm:h-80 md:h-96 lg:h-[500px]">
               {galleryImages.map((image, index) => (
                 <div
                   key={index}
@@ -228,8 +232,8 @@ const LandingPage = () => {
                     alt={image.caption}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/80 to-transparent p-6">
-                    <p className="text-white text-xl font-semibold text-center">
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/80 to-transparent p-4 sm:p-6">
+                    <p className="text-white text-base sm:text-lg md:text-xl font-semibold text-center">
                       {image.caption}
                     </p>
                   </div>
@@ -240,28 +244,28 @@ const LandingPage = () => {
             {/* Navigation Buttons */}
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 sm:p-3 rounded-full transition-all duration-300 hover:scale-110"
               aria-label="Previous"
             >
-              <ChevronLeft className="w-6 h-6 text-slate-800" />
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-slate-800" />
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 sm:p-3 rounded-full transition-all duration-300 hover:scale-110"
               aria-label="Next"
             >
-              <ChevronRight className="w-6 h-6 text-slate-800" />
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-slate-800" />
             </button>
 
             {/* Dots */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+            <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
               {galleryImages.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
                     index === currentSlide 
-                      ? 'bg-white w-8' 
+                      ? 'bg-white w-6 sm:w-8' 
                       : 'bg-white/50 hover:bg-white/75'
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
@@ -271,82 +275,41 @@ const LandingPage = () => {
           </div>
 
           {/* View All Button */}
-          <div className="text-center mt-8">
+          {/* <div className="text-center mt-6 sm:mt-8">
             <button 
               onClick={handleNavigateToDocument}
-              className="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 font-semibold transition-colors"
+              className="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 font-semibold transition-colors text-sm sm:text-base"
             >
               Lihat Semua Dokumentasi
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-4 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center text-slate-800 mb-4">
-            Fitur WebGIS
-          </h2>
-          <p className="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
-            Platform yang dilengkapi dengan berbagai fitur untuk memudahkan akses informasi spasial
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Peta Interaktif',
-                description: 'Jelajahi peta desa secara interaktif dengan berbagai layer informasi yang dapat diaktifkan/nonaktifkan sesuai kebutuhan',
-                icon: '🗺️'
-              },
-              {
-                title: 'Data Spasial',
-                description: 'Akses data spasial lengkap meliputi batas administrasi, penggunaan lahan, dan infrastruktur desa',
-                icon: '📊'
-              },
-              {
-                title: 'Analisis Wilayah',
-                description: 'Lakukan analisis spasial sederhana untuk mendukung perencanaan dan pengambilan keputusan',
-                icon: '🔍'
-              }
-            ].map((feature, index) => (
-              <div
-                key={index}
-                id={`feature-${index}`}
-                data-animate
-                className={`bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-2 ${
-                  isVisible[`feature-${index}`] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
-              >
-                <div className="text-5xl mb-4">{feature.icon}</div>
-                <h3 className="text-2xl font-bold text-slate-800 mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
+          </div> */}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
+      <section className="py-12 sm:py-16 md:py-20 px-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
             Siap Menjelajahi Peta Desa Srinanti?
           </h2>
-          <p className="text-xl mb-8 opacity-90">
+          {/* <p className="text-lg sm:text-xl mb-6 sm:mb-8 opacity-90">
             Akses informasi geografis lengkap dan terkini dari Desa Srinanti
-          </p>
-          <button 
-            onClick={handleNavigateToWebGIS}
-            className="inline-block bg-teal-600 hover:bg-teal-700 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-teal-500/50"
-          >
-            Mulai Eksplorasi WebGIS
-          </button>
+          </p> */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button 
+              onClick={handleNavigateToPetaEkowisata}
+              className="inline-block bg-teal-600 hover:bg-teal-700 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-teal-500/50"
+            >
+              Peta Ekowisata Mangrove
+            </button>
+            <button 
+              onClick={handleNavigateToPetaAmenitas}
+              className="inline-block bg-purple-600 hover:bg-purple-700 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/50"
+            >
+              Peta Amenitas Wisata
+            </button>
+          </div>
         </div>
       </section>
 
