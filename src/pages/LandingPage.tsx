@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, MapPin, Users, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { TreePine, Users, Home, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -66,11 +66,6 @@ const LandingPage = () => {
   const handleNavigateToPetaEkowisata = () => {
     navigate('/peta-ekowisata');
   };
-
-  // // Handler untuk navigasi ke halaman Dokumen
-  // const handleNavigateToDocument = () => {
-  //   navigate('/dokumen');
-  // };
 
   // Handler untuk scroll ke section tentang
   const handleScrollToAbout = () => {
@@ -181,10 +176,10 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {[
-              { icon: MapPin, value: '1,05 km²', label: 'Luas Desa (BPS 2019)' },
-              { icon: Users, value: '4.985 ha', label: 'Mangrove yang Dikelola' },
-              { icon: FileText, value: '12', label: 'Rukun Tetangga' },
-              { icon: Camera, value: '2.750', label: 'Jiwa (BPS 2019)' }
+              { icon: Home, value: '1,05 km²', label: 'Luas Desa (BPS 2019)' },
+              { icon: TreePine, value: '4.985 ha', label: 'Mangrove yang Dikelola' },
+              { icon: Home, value: '12', label: 'Rukun Tetangga' },
+              { icon: Users, value: '2.750', label: 'Jiwa (BPS 2019)' }
             ].map((stat, index) => (
               <div 
                 key={index}
@@ -273,17 +268,6 @@ const LandingPage = () => {
               ))}
             </div>
           </div>
-
-          {/* View All Button */}
-          {/* <div className="text-center mt-6 sm:mt-8">
-            <button 
-              onClick={handleNavigateToDocument}
-              className="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 font-semibold transition-colors text-sm sm:text-base"
-            >
-              Lihat Semua Dokumentasi
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-          </div> */}
         </div>
       </section>
 
@@ -293,9 +277,6 @@ const LandingPage = () => {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
             Siap Menjelajahi Peta Desa Srinanti?
           </h2>
-          {/* <p className="text-lg sm:text-xl mb-6 sm:mb-8 opacity-90">
-            Akses informasi geografis lengkap dan terkini dari Desa Srinanti
-          </p> */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
               onClick={handleNavigateToPetaEkowisata}

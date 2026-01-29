@@ -1,12 +1,121 @@
-import React, { useState } from 'react';
-import { MapContainer, TileLayer, ScaleControl } from 'react-leaflet';
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, ScaleControl, GeoJSON, useMap } from 'react-leaflet';
 import OrthophotoLayer from '../components/OrthophotoLayer';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+
+// Custom marker icons untuk amenitas
+const createCustomIcon = (color: string) => {
+  return L.divIcon({
+    className: 'custom-marker',
+    html: `
+      <div style="
+        background: ${color};
+        width: 32px;
+        height: 32px;
+        border-radius: 50% 50% 50% 0;
+        transform: rotate(-45deg);
+        border: 3px solid white;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
+        <div style="
+          width: 12px;
+          height: 12px;
+          background: white;
+          border-radius: 50%;
+          transform: rotate(45deg);
+        "></div>
+      </div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+};
+
+// Component untuk auto-zoom ke layer yang aktif
+const AutoZoom: React.FC<{ data: any }> = ({ data }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (data && data.features && data.features.length > 0) {
+      const geoJsonLayer = L.geoJSON(data);
+      const bounds = geoJsonLayer.getBounds();
+      if (bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
+      }
+    }
+  }, [data, map]);
+  
+  return null;
+};
 
 const AmenitasPage: React.FC = () => {
   const [basemap, setBasemap] = useState<'satellite' | 'street'>('satellite');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [orthophotoOpacity, setOrthophotoOpacity] = useState(0.85);
+  const [orthophotoOpacity, setOrthophotoOpacity] = useState(1);
+  const [amenitasData, setAmenitasData] = useState<any>(null);
+  const [showAmenitas, setShowAmenitas] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load amenitas GeoJSON data
+  useEffect(() => {
+    fetch('./data/amenitas.geojson')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Gagal memuat data amenitas');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setAmenitasData(data);
+      })
+      .catch((err) => {
+        console.error('Error loading amenitas GeoJSON:', err);
+        setError('Gagal memuat data amenitas. Pastikan file ada di public/data/');
+      });
+  }, []);
+
+  // Function untuk mendapatkan warna marker berdasarkan tipe amenitas
+  const getMarkerColor = (description: string): string => {
+    const desc = description.toLowerCase();
+    
+    // Kategorisasi berdasarkan jenis fasilitas
+    if (desc.includes('warung') || desc.includes('toko') || desc.includes('sembako')) {
+      return '#f59e0b'; // Orange - Warung/Toko
+    } else if (desc.includes('masjid') || desc.includes('musholla') || desc.includes('gereja') || desc.includes('tpq')) {
+      return '#8b5cf6'; // Purple - Tempat Ibadah
+    } else if (desc.includes('sekolah') || desc.includes('paud') || desc.includes('tk') || desc.includes('sd') || desc.includes('mi')) {
+      return '#3b82f6'; // Blue - Pendidikan
+    } else if (desc.includes('kantor') || desc.includes('balai') || desc.includes('gedung') || desc.includes('sekretariat') || desc.includes('bumdes') || desc.includes('kecamatan') || desc.includes('desa')) {
+      return '#ef4444'; // Red - Pemerintahan
+    } else if (desc.includes('kesehatan') || desc.includes('puskesmas') || desc.includes('posyandu') || desc.includes('apotek')) {
+      return '#10b981'; // Green - Kesehatan
+    } else if (desc.includes('cafe') || desc.includes('kopi') || desc.includes('boba')) {
+      return '#ec4899'; // Pink - Kafe
+    } else if (desc.includes('bengkel') || desc.includes('salon') || desc.includes('pangkas') || desc.includes('counter') || desc.includes('barbershop')) {
+      return '#06b6d4'; // Cyan - Jasa
+    } else if (desc.includes('lapangan') || desc.includes('playground') || desc.includes('playstation')) {
+      return '#84cc16'; // Lime - Olahraga/Rekreasi
+    } else if (desc.includes('pelabuhan') || desc.includes('speed boat')) {
+      return '#6366f1'; // Indigo - Transportasi
+    } else if (desc.includes('penginapan') || desc.includes('hotel')) {
+      return '#f97316'; // Deep Orange - Penginapan
+    } else if (desc.includes('tpu') || desc.includes('pemakaman')) {
+      return '#64748b'; // Slate - Pemakaman
+    } else if (desc.includes('pasar')) {
+      return '#eab308'; // Yellow - Pasar
+    } else if (desc.includes('bank')) {
+      return '#14b8a6'; // Teal - Bank
+    } else if (desc.includes('polisi') || desc.includes('pos')) {
+      return '#dc2626'; // Red Dark - Keamanan
+    }
+    
+    return '#64748b'; // Slate - Default
+  };
 
   return (
     <div className="flex h-[calc(100vh-5rem)] overflow-hidden bg-slate-900">
@@ -62,11 +171,28 @@ const AmenitasPage: React.FC = () => {
                   <div className="flex-1">
                     <h4 className="text-sm font-bold text-purple-400 mb-1">Foto Udara Resolusi Tinggi</h4>
                     <p className="text-xs text-slate-300 leading-relaxed">
-                      Orthofoto hasil pemetaan drone menampilkan detail amenitas wisata di Desa Srinanti. Zoom in untuk melihat infrastruktur dengan lebih jelas.
+                      Orthofoto hasil pemetaan drone menampilkan titik lokasi amenitas wisata di Desa Srinanti.
                     </p>
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Amenitas Layer Toggle */}
+            <div className="p-4 border-t border-slate-700/50">
+              <label className="flex items-center cursor-pointer group">
+                <div className="relative flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={showAmenitas}
+                    onChange={() => setShowAmenitas(!showAmenitas)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-12 h-6 bg-slate-600 rounded-full peer peer-checked:bg-gradient-to-r peer-checked:from-purple-500 peer-checked:to-pink-600 transition-all duration-200 shadow-inner"></div>
+                  <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 peer-checked:translate-x-6 shadow-md"></div>
+                </div>
+                <span className="ml-4 text-sm font-semibold text-white">Tampilkan Amenitas Wisata</span>
+              </label>
             </div>
 
             {/* Opacity Control */}
@@ -92,22 +218,24 @@ const AmenitasPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Info Card */}
-          {/* <div className="bg-gradient-to-br from-blue-500/10 to-teal-500/10 rounded-2xl p-5 border border-teal-500/20">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-sm font-bold text-blue-400 mb-1">Informasi</h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Peta ini menampilkan orthofoto untuk identifikasi lokasi amenitas wisata seperti tempat parkir, gazebo, toilet, dan jalur wisata.
-                </p>
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-500/10 rounded-xl p-4 border border-red-500/20">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-bold text-red-400 mb-1">Error</h4>
+                  <p className="text-xs text-slate-300 leading-relaxed">{error}</p>
+                </div>
               </div>
             </div>
-          </div> */}
+          )}
+
+
         </div>
       </div>
 
@@ -150,6 +278,9 @@ const AmenitasPage: React.FC = () => {
             {/* Scale Control */}
             <ScaleControl position="bottomleft" imperial={false} />
 
+            {/* Auto Zoom Component */}
+            {showAmenitas && amenitasData && <AutoZoom data={amenitasData} />}
+
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               opacity={basemap === 'street' ? 1 : 0}
@@ -168,11 +299,42 @@ const AmenitasPage: React.FC = () => {
               tileUrl="https://api.maptiler.com/tiles/019bdf3c-bab9-7f60-a89c-0eb5b3915741/{z}/{x}/{y}.png?key=eEVS9pTGeOsrG57V9SUj"
               opacity={orthophotoOpacity}
             />
+
+            {/* Amenitas GeoJSON Layer */}
+            {showAmenitas && amenitasData && (
+              <GeoJSON
+                data={amenitasData}
+                pointToLayer={(feature, latlng) => {
+                  const color = getMarkerColor(feature.properties.descriptio || '');
+                  return L.marker(latlng, {
+                    icon: createCustomIcon(color)
+                  });
+                }}
+                onEachFeature={(feature, layer) => {
+                  if (feature.properties) {
+                    const props = feature.properties;
+                    const popupContent = `
+                      <div style="font-family: sans-serif; min-width: 220px;">
+                        <h3 style="margin: 0 0 8px 0; color: #8b5cf6; font-size: 15px; font-weight: bold;">
+                          ${props.Name || 'Amenitas'}
+                        </h3>
+                        <div style="font-size: 13px; line-height: 1.6;">
+                          <p style="margin: 4px 0; color: #475569;">
+                            <strong>Jenis:</strong> ${props.descriptio || '-'}
+                          </p>
+                        </div>
+                      </div>
+                    `;
+                    layer.bindPopup(popupContent);
+                  }
+                }}
+              />
+            )}
           </MapContainer>
 
           {/* Legend - Fixed relatif terhadap map container */}
           <div className="absolute right-4 bottom-4 z-[10]">
-            <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-2xl border border-purple-500/20 p-4">
+            <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-2xl border border-purple-500/20 p-4 max-w-xs">
               <h3 className="text-xs font-bold text-white tracking-widest flex items-center uppercase mb-3">
                 <span className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mr-2"></span>
                 Legenda
@@ -188,6 +350,48 @@ const AmenitasPage: React.FC = () => {
                     Foto Udara Resolusi Tinggi
                   </span>
                 </div>
+                
+                {showAmenitas && amenitasData && (
+                  <>
+                    <div className="border-t border-slate-700 my-2 pt-2">
+                      <p className="text-xs font-bold text-purple-400 mb-2">Kategori Amenitas:</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 rounded-full" style={{background: '#f59e0b'}}></div>
+                        <span className="text-slate-300">Warung/Toko</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 rounded-full" style={{background: '#8b5cf6'}}></div>
+                        <span className="text-slate-300">Ibadah</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 rounded-full" style={{background: '#3b82f6'}}></div>
+                        <span className="text-slate-300">Pendidikan</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 rounded-full" style={{background: '#ef4444'}}></div>
+                        <span className="text-slate-300">Pemerintahan</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 rounded-full" style={{background: '#10b981'}}></div>
+                        <span className="text-slate-300">Kesehatan</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 rounded-full" style={{background: '#ec4899'}}></div>
+                        <span className="text-slate-300">Kafe</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 rounded-full" style={{background: '#06b6d4'}}></div>
+                        <span className="text-slate-300">Jasa</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 rounded-full" style={{background: '#84cc16'}}></div>
+                        <span className="text-slate-300">Olahraga</span>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

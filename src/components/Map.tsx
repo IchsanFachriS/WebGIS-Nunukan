@@ -138,11 +138,11 @@ const Map: React.FC<MapProps> = ({
           <GeoJSON
             data={geoJsonData as any}
             style={() => ({
-              fillColor: '#00400E',
+              fillColor: '#00FFA7',
               weight: 1,
               opacity: 1,
               color: '#fff',
-              fillOpacity: 0.6,
+              fillOpacity: 1,
             })}
             onEachFeature={(feature, layer) => {
               if (feature.properties) {

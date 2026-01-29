@@ -72,7 +72,7 @@ const AboutPage: React.FC = () => {
           </div>
           <h1 className="text-5xl font-bold mb-4 tracking-tight">Tentang SPACEMANGROVE</h1>
           <p className="text-xl text-teal-100 max-w-3xl mx-auto">
-            Program Pengabdian Masyarakat Pemetaan Mangrove di Nunukan, Kalimantan Utara
+            Program Pengabdian Masyarakat Pemetaan Mangrove di Desa Srinanti, Kabupaten Nunukan, Kalimantan Utara
           </p>
         </div>
       </div>
@@ -97,23 +97,15 @@ const AboutPage: React.FC = () => {
             <ul className="space-y-3 ml-6">
               <li className="flex items-start">
                 <span className="text-teal-400 font-bold mr-3">•</span>
-                <span>Memetakan dan mendokumentasikan persebaran hutan mangrove di wilayah Nunukan, Kalimantan Utara menggunakan teknologi WebGIS modern</span>
+                <span>Memetakan dan mendokumentasikan persebaran hutan mangrove di wilayah Desa Srinanti, Kabupaten Nunukan, Kalimantan Utara</span>
               </li>
               <li className="flex items-start">
                 <span className="text-teal-400 font-bold mr-3">•</span>
-                <span>Meningkatkan kesadaran masyarakat lokal tentang pentingnya ekosistem mangrove dan upaya konservasinya</span>
+                <span>Menyediakan informasi yang dapat diakses oleh masyarakat dan pemangku kepentingan untuk mendukung pengambilan keputusan terkait pengelolaan ekowisata mangrove</span>
               </li>
               <li className="flex items-start">
                 <span className="text-teal-400 font-bold mr-3">•</span>
-                <span>Menyediakan data spasial yang akurat dan dapat diakses oleh pemangku kepentingan untuk mendukung pengambilan keputusan terkait pengelolaan mangrove</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-teal-400 font-bold mr-3">•</span>
-                <span>Membangun kapasitas masyarakat dalam pemanfaatan teknologi geospasial untuk monitoring lingkungan</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-teal-400 font-bold mr-3">•</span>
-                <span>Mendukung upaya pelestarian dan rehabilitasi ekosistem mangrove di wilayah pesisir Nunukan</span>
+                <span>Mendukung upaya pelestarian ekosistem mangrove di wilayah Desa Srinanti</span>
               </li>
             </ul>
 

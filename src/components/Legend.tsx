@@ -10,11 +10,11 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
   // Definisi legenda untuk setiap layer
   const legendItems = {
     boundary: {
-      title: 'Batas Wilayah',
+      title: 'Rekomendasi Rute Ekowisata Susur Mangrove',
       items: [
         { 
           color: '#f97316', 
-          label: 'Batas Administrasi Desa Srinanti', 
+          label: 'Rekomendasi Rute Ekowisata Susur Mangrove', 
           pattern: 'dashed' as const,
           weight: 3,
           isImage: false

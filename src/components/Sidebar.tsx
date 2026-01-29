@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle, visibleLayers, onLa
     { 
       id: 'mangrove', 
       name: 'Kawasan Hutan Mangrove yang dikelola Desa Srinanti',
-      description: 'Sumber: Badan Informasi Geospasial (BIG)',
+      description: 'Sumber: Kementrian Lingkungan Hidup dan Kehutanan RI',
       color: 'text-teal-400',
     },
     { 
