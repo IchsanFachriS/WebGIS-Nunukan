@@ -10,11 +10,12 @@ const EkowisataPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
+  // FIXED: Urutan baru dan default state yang benar
   const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({
-    boundary: true,
-    mangrove: true,
-    landcover: false,
-    bekantan: true, // NEW: Layer bekantan aktif by default
+    bekantan: true,    // Spot Observasi Bekantan - aktif by default
+    boundary: true,    // Rekomendasi Rute Ekowisata - aktif by default
+    mangrove: false,   // Kawasan Hutan Mangrove - nonaktif by default
+    landcover: false,  // Tutupan Lahan - nonaktif by default
   });
   
   const [basemap, setBasemap] = useState<'satellite' | 'street'>('satellite');

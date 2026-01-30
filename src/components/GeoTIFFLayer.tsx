@@ -19,21 +19,34 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
   const map = useMap();
   const layerRef = useRef<any>(null);
   const isLoadingRef = useRef(false);
+  const clickHandlerRef = useRef<any>(null);
   const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!show) {
-      if (layerRef.current) {
-        try {
-          map.removeLayer(layerRef.current);
-          layerRef.current = null;
-        } catch (e) {
-          console.error('Error removing GeoTIFF layer:', e);
-        }
+    // FIXED: Cleanup terlebih dahulu sebelum cek show
+    // Remove existing layer
+    if (layerRef.current) {
+      try {
+        map.removeLayer(layerRef.current);
+        layerRef.current = null;
+      } catch (e) {
+        console.error('Error removing GeoTIFF layer:', e);
       }
+    }
+
+    // Remove click handler if exists
+    if (clickHandlerRef.current) {
+      map.off('click', clickHandlerRef.current);
+      clickHandlerRef.current = null;
+    }
+
+    // FIXED: Jika show=false, stop di sini (tidak load layer)
+    if (!show) {
+      isLoadingRef.current = false;
       return;
     }
 
+    // FIXED: Cek apakah sedang loading untuk menghindari multiple loads
     if (layerRef.current || isLoadingRef.current) {
       return;
     }
@@ -94,6 +107,7 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
           }
         };
 
+        // FIXED: Double check show status sebelum add layer
         if (show && !layerRef.current) {
           layerRef.current = new window.GeoRasterLayer({
             georaster: georaster,
@@ -109,7 +123,7 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
           console.log('GeoTIFF layer added to map successfully');
 
           // Tambahkan event listener untuk klik
-          map.on('click', (e: any) => {
+          clickHandlerRef.current = (e: any) => {
             try {
               const latlng = e.latlng;
               
@@ -152,7 +166,9 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
             } catch (error) {
               console.error('Error identifying pixel value:', error);
             }
-          });
+          };
+          
+          map.on('click', clickHandlerRef.current);
         }
       } catch (error: any) {
         console.error('Error loading GeoTIFF:', error);
@@ -183,6 +199,7 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
 
     loadGeoTIFF();
 
+    // Cleanup function
     return () => {
       if (layerRef.current) {
         try {
@@ -193,10 +210,13 @@ const GeoTIFFLayer: React.FC<GeoTIFFLayerProps> = ({ show, url }) => {
         }
       }
       // Hapus event listener klik
-      map.off('click');
+      if (clickHandlerRef.current) {
+        map.off('click', clickHandlerRef.current);
+        clickHandlerRef.current = null;
+      }
       isLoadingRef.current = false;
     };
-  }, [show, url, map]);
+  }, [show, url, map]); // FIXED: Dependencies yang benar
 
   return null;
 };

@@ -8,7 +8,14 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle, visibleLayers, onLayerToggle }) => {
+  // FIXED: Urutan layer baru sesuai requirement
   const layers = [
+    { 
+      id: 'bekantan', 
+      name: 'Spot Observasi Bekantan',
+      description: 'Lokasi habitat bekantan dengan foto & video',
+      color: 'text-orange-400',
+    },
     { 
       id: 'boundary', 
       name: 'Rekomendasi Rute Ekowisata Susur Mangrove',
@@ -26,12 +33,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle, visibleLayers, onLa
       name: 'Tutupan Lahan 2024',
       description: 'Sumber: Esri Living Atlas',
       color: 'text-blue-400',
-    },
-    { 
-      id: 'bekantan', 
-      name: 'Spot Observasi Bekantan',
-      description: 'Lokasi habitat bekantan dengan foto & video',
-      color: 'text-orange-400',
     },
   ];
 

@@ -7,8 +7,21 @@ interface LegendProps {
 const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Definisi legenda untuk setiap layer
+  // FIXED: Urutan legenda disesuaikan dengan urutan layer baru
   const legendItems = {
+    bekantan: {
+      title: 'Spot Observasi Bekantan',
+      items: [
+        { 
+          color: 'linear-gradient(135deg, #fb923c, #f97316)', 
+          label: 'Lokasi Bekantan', 
+          pattern: undefined,
+          weight: 1,
+          isImage: false,
+          icon: '🐒'
+        }
+      ]
+    },
     boundary: {
       title: 'Rekomendasi Rute Ekowisata Susur Mangrove',
       items: [
@@ -45,19 +58,6 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
         { color: '#FFFFFF', label: 'Salju/Es', pattern: undefined, isImage: false },
         { color: '#CCCCCC', label: 'Awan', pattern: undefined, isImage: false },
         { color: '#ADFF2F', label: 'Padang Rumput', pattern: undefined, isImage: false }
-      ]
-    },
-    bekantan: {
-      title: 'Spot Observasi Bekantan',
-      items: [
-        { 
-          color: 'linear-gradient(135deg, #fb923c, #f97316)', 
-          label: 'Lokasi Bekantan', 
-          pattern: undefined,
-          weight: 1,
-          isImage: false,
-          icon: '🐒'
-        }
       ]
     }
   };

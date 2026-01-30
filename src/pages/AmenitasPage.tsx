@@ -167,11 +167,11 @@ const AmenitasPage: React.FC = () => {
     return `
       <div style="font-family: sans-serif; min-width: 250px; max-width: 320px;">
         <h3 style="margin: 0 0 8px 0; color: #8b5cf6; font-size: 16px; font-weight: bold;">
-          ${props.Name || 'Amenitas'}
+          ${props.descriptio || 'Amenitas'}
         </h3>
         <div style="font-size: 13px; line-height: 1.6;">
           <p style="margin: 4px 0; color: #475569;">
-            <strong>Jenis:</strong> ${props.descriptio || '-'}
+            ${props.descriptio || '-'}
           </p>
         </div>
         ${photoGalleryHTML}
