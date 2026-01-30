@@ -46,6 +46,19 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
         { color: '#CCCCCC', label: 'Awan', pattern: undefined, isImage: false },
         { color: '#ADFF2F', label: 'Padang Rumput', pattern: undefined, isImage: false }
       ]
+    },
+    bekantan: {
+      title: 'Spot Observasi Bekantan',
+      items: [
+        { 
+          color: 'linear-gradient(135deg, #fb923c, #f97316)', 
+          label: 'Lokasi Bekantan', 
+          pattern: undefined,
+          weight: 1,
+          isImage: false,
+          icon: '🐒'
+        }
+      ]
     }
   };
 

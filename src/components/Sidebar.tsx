@@ -27,6 +27,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle, visibleLayers, onLa
       description: 'Sumber: Esri Living Atlas',
       color: 'text-blue-400',
     },
+    { 
+      id: 'bekantan', 
+      name: 'Spot Observasi Bekantan',
+      description: 'Lokasi habitat bekantan dengan foto & video',
+      color: 'text-orange-400',
+    },
   ];
 
   return (

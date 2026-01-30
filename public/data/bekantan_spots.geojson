@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "name": "Lokasi Bekantan",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Spot Bekantan",
+        "best_time": "Sore hari",
+        "photos": ["bekantan-1.jpeg", "bekantan-2.jpeg"],
+        "videos": ["bekantan-1.mp4"]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [117.307, 4.149]
+      }
+    }
+  ]
+}

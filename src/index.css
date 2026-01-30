@@ -139,10 +139,103 @@ h1, h2, h3, h4, h5, h6 {
   color: rgba(255, 255, 255, 0.95) !important;
 }
 
+/* Custom Popup Style untuk Amenitas dengan Foto */
+.amenitas-popup .leaflet-popup-content-wrapper {
+  border-radius: 16px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  padding: 8px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  max-width: 350px !important;
+}
+
+.amenitas-popup .leaflet-popup-content {
+  margin: 8px !important;
+}
+
+/* Scrollbar untuk gallery foto */
+.amenitas-popup .leaflet-popup-content > div > div:nth-child(2) > div {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.5) rgba(226, 232, 240, 0.3);
+}
+
+.amenitas-popup .leaflet-popup-content > div > div:nth-child(2) > div::-webkit-scrollbar {
+  height: 6px;
+}
+
+.amenitas-popup .leaflet-popup-content > div > div:nth-child(2) > div::-webkit-scrollbar-track {
+  background: rgba(226, 232, 240, 0.3);
+  border-radius: 3px;
+}
+
+.amenitas-popup .leaflet-popup-content > div > div:nth-child(2) > div::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 3px;
+}
+
+.amenitas-popup .leaflet-popup-content > div > div:nth-child(2) > div::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.7);
+}
+
 /* Leaflet Bar Styling */
 .leaflet-bar {
   border-radius: 8px !important;
   overflow: hidden;
+}
+
+/* Route Line Animation */
+.route-line-animated {
+  animation: dash 30s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+/* Bekantan Popup Styling */
+.bekantan-popup .leaflet-popup-content-wrapper {
+  border-radius: 16px !important;
+  box-shadow: 0 20px 25px -5px rgba(249, 115, 22, 0.2), 0 10px 10px -5px rgba(249, 115, 22, 0.1) !important;
+  padding: 8px;
+  border: 2px solid rgba(251, 146, 60, 0.3);
+  max-width: 350px !important;
+}
+
+.bekantan-popup .leaflet-popup-tip {
+  border-top-color: rgba(251, 146, 60, 0.3) !important;
+}
+
+/* Route Popup Styling */
+.route-popup .leaflet-popup-content-wrapper {
+  border-radius: 16px !important;
+  padding: 8px;
+  border: 2px solid rgba(249, 115, 22, 0.2);
+}
+
+/* Scrollbar for media gallery */
+.bekantan-popup .leaflet-popup-content > div > div > div {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(251, 146, 60, 0.5) rgba(254, 243, 199, 0.3);
+}
+
+.bekantan-popup .leaflet-popup-content > div > div > div::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.bekantan-popup .leaflet-popup-content > div > div > div::-webkit-scrollbar-track {
+  background: rgba(254, 243, 199, 0.3);
+  border-radius: 3px;
+}
+
+.bekantan-popup .leaflet-popup-content > div > div > div::-webkit-scrollbar-thumb {
+  background: rgba(251, 146, 60, 0.5);
+  border-radius: 3px;
+}
+
+.bekantan-popup .leaflet-popup-content > div > div > div::-webkit-scrollbar-thumb:hover {
+  background: rgba(251, 146, 60, 0.7);
 }
 
 /* Responsive adjustments untuk scale control */

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Map from '../components/Map';
 import Sidebar from '../components/Sidebar';
 import Legend from '../components/Legend';
+import MapInsetNavigation from '../components/MapInsetNavigation';
 import { MangroveGeoJSON } from '../types';
 
 const EkowisataPage: React.FC = () => {
@@ -13,6 +14,7 @@ const EkowisataPage: React.FC = () => {
     boundary: true,
     mangrove: true,
     landcover: false,
+    bekantan: true, // NEW: Layer bekantan aktif by default
   });
   
   const [basemap, setBasemap] = useState<'satellite' | 'street'>('satellite');
@@ -64,6 +66,9 @@ const EkowisataPage: React.FC = () => {
       />
 
       <div className="flex-1 relative">
+        {/* Map Inset Navigation */}
+        <MapInsetNavigation />
+
         {/* Floating Basemap Switcher */}
         <div className="absolute top-6 right-6 z-[20]">
           <div className="bg-slate-800/90 backdrop-blur-md p-1.5 rounded-2xl shadow-xl border border-teal-500/20 flex gap-1">
@@ -97,6 +102,7 @@ const EkowisataPage: React.FC = () => {
           showLandcover={visibleLayers.landcover}
           showBoundary={visibleLayers.boundary}
           showOrthophoto={false}
+          showBekantan={visibleLayers.bekantan}
         />
 
         {/* Legenda Dinamis - Fixed relatif terhadap map container */}

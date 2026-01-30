@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, ScaleControl, GeoJSON, useMap } from 'react-le
 import OrthophotoLayer from '../components/OrthophotoLayer';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import MapInsetNavigation from '../components/MapInsetNavigation'; 
 
 // Custom marker icons untuk amenitas
 const createCustomIcon = (color: string) => {
@@ -117,6 +118,67 @@ const AmenitasPage: React.FC = () => {
     return '#64748b'; // Slate - Default
   };
 
+  // Function untuk membuat konten popup dengan foto
+  const createPopupContent = (props: any): string => {
+    const photos = props.photos || [];
+    const hasPhotos = photos.length > 0;
+
+    // Generate photo gallery HTML
+    let photoGalleryHTML = '';
+    if (hasPhotos) {
+      photoGalleryHTML = `
+        <div style="margin-top: 12px;">
+          <div style="display: flex; gap: 8px; overflow-x: auto; padding: 4px 0;">
+            ${photos.map((photo: string) => `
+              <div style="flex-shrink: 0;">
+                <img 
+                  src="./images/amenitas/${photo}" 
+                  alt="${props.Name}"
+                  style="
+                    width: 120px;
+                    height: 90px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: transform 0.2s;
+                    border: 2px solid #e5e7eb;
+                  "
+                  onmouseover="this.style.transform='scale(1.05)'"
+                  onmouseout="this.style.transform='scale(1)'"
+                  onclick="window.open('./images/amenitas/${photo}', '_blank')"
+                  onerror="this.style.display='none'; this.parentElement.style.display='none';"
+                />
+              </div>
+            `).join('')}
+          </div>
+          <p style="
+            font-size: 10px;
+            color: #9ca3af;
+            margin-top: 8px;
+            text-align: center;
+            font-style: italic;
+          ">
+            Klik foto untuk memperbesar
+          </p>
+        </div>
+      `;
+    }
+
+    return `
+      <div style="font-family: sans-serif; min-width: 250px; max-width: 320px;">
+        <h3 style="margin: 0 0 8px 0; color: #8b5cf6; font-size: 16px; font-weight: bold;">
+          ${props.Name || 'Amenitas'}
+        </h3>
+        <div style="font-size: 13px; line-height: 1.6;">
+          <p style="margin: 4px 0; color: #475569;">
+            <strong>Jenis:</strong> ${props.descriptio || '-'}
+          </p>
+        </div>
+        ${photoGalleryHTML}
+      </div>
+    `;
+  };
+
   return (
     <div className="flex h-[calc(100vh-5rem)] overflow-hidden bg-slate-900">
       {/* Mobile Toggle Button */}
@@ -171,7 +233,7 @@ const AmenitasPage: React.FC = () => {
                   <div className="flex-1">
                     <h4 className="text-sm font-bold text-purple-400 mb-1">Foto Udara Resolusi Tinggi</h4>
                     <p className="text-xs text-slate-300 leading-relaxed">
-                      Orthofoto hasil pemetaan drone menampilkan titik lokasi amenitas wisata di Desa Srinanti.
+                      Orthofoto hasil pemetaan drone menampilkan titik lokasi amenitas wisata di Desa Srinanti. Klik marker untuk melihat foto tempat.
                     </p>
                   </div>
                 </div>
@@ -234,13 +296,12 @@ const AmenitasPage: React.FC = () => {
               </div>
             </div>
           )}
-
-
         </div>
       </div>
 
       {/* Map Container */}
       <div className="flex-1 relative">
+        <MapInsetNavigation />
         {/* Basemap Switcher */}
         <div className="absolute top-6 right-6 z-[20]">
           <div className="bg-slate-800/90 backdrop-blur-md p-1.5 rounded-2xl shadow-xl border border-teal-500/20 flex gap-1">
@@ -312,20 +373,11 @@ const AmenitasPage: React.FC = () => {
                 }}
                 onEachFeature={(feature, layer) => {
                   if (feature.properties) {
-                    const props = feature.properties;
-                    const popupContent = `
-                      <div style="font-family: sans-serif; min-width: 220px;">
-                        <h3 style="margin: 0 0 8px 0; color: #8b5cf6; font-size: 15px; font-weight: bold;">
-                          ${props.Name || 'Amenitas'}
-                        </h3>
-                        <div style="font-size: 13px; line-height: 1.6;">
-                          <p style="margin: 4px 0; color: #475569;">
-                            <strong>Jenis:</strong> ${props.descriptio || '-'}
-                          </p>
-                        </div>
-                      </div>
-                    `;
-                    layer.bindPopup(popupContent);
+                    const popupContent = createPopupContent(feature.properties);
+                    layer.bindPopup(popupContent, {
+                      maxWidth: 350,
+                      className: 'amenitas-popup'
+                    });
                   }
                 }}
               />
