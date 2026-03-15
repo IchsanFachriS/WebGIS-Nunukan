@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 
 interface LegendProps {
   visibleLayers: Record<string, boolean>;
+  ndviYear?: number;
 }
 
-const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
+const Legend: React.FC<LegendProps> = ({ visibleLayers, ndviYear = 2024 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // FIXED: Urutan legenda disesuaikan dengan urutan layer baru
   const legendItems = {
     bekantan: {
       title: 'Spot Observasi Bekantan',
@@ -59,6 +59,10 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
         { color: '#CCCCCC', label: 'Awan', pattern: undefined, isImage: false },
         { color: '#ADFF2F', label: 'Padang Rumput', pattern: undefined, isImage: false }
       ]
+    },
+    ndvi: {
+      title: `NDVI Tahun ${ndviYear}`,
+      items: [] as any[] // akan dirender custom dengan gradient bar
     }
   };
 
@@ -67,7 +71,7 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
     ([key]) => visibleLayers[key]
   );
 
-  // Jika tidak ada layer aktif, tampilkan versi collapsed
+  // Jika tidak ada layer aktif
   if (activeLegends.length === 0) {
     return (
       <div className="bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-2xl border border-teal-500/20 w-12 h-12">
@@ -125,37 +129,76 @@ const Legend: React.FC<LegendProps> = ({ visibleLayers }) => {
                 <h4 className="text-xs font-bold text-teal-400 uppercase tracking-wider">
                   {legend.title}
                 </h4>
-                <div className="space-y-2">
-                  {legend.items.map((item, index) => (
-                    <div key={index} className="flex items-center space-x-3 group">
-                      {item.isImage ? (
-                        // Untuk orthofoto, tampilkan icon khusus
-                        <div className="w-5 h-5 rounded shadow-sm group-hover:scale-110 transition-transform flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500">
-                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                        </div>
-                      ) : (
-                        <div 
-                          className={`w-5 h-5 rounded shadow-sm group-hover:scale-110 transition-transform flex-shrink-0`}
-                          style={{
-                            background: item.color,
-                            ...(item.pattern === 'dashed' && {
-                              backgroundImage: 'repeating-linear-gradient(90deg, #f97316 0, #f97316 8px, transparent 8px, transparent 16px)',
-                              backgroundSize: '100% 3px',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'repeat-x',
-                              border: 'none'
-                            })
-                          }}
-                        />
-                      )}
-                      <span className="text-xs font-medium text-slate-200 leading-tight">
-                        {item.label}
-                      </span>
+
+                {/* Render khusus untuk NDVI: gradient bar */}
+                {key === 'ndvi' ? (
+                  <div className="space-y-2">
+                    {/* Gradient Bar */}
+                    <div
+                      className="w-full h-5 rounded-md border border-slate-600/50"
+                      style={{
+                        background: 'linear-gradient(to right, #8c0000, #c81400, #ff4500, #ff8c00, #ffd700, #adff2f, #55d200, #2db400, #1a8200)'
+                      }}
+                    />
+                    {/* Label bawah */}
+                    <div className="flex justify-between text-slate-400" style={{ fontSize: '10px' }}>
+                      <span>-1.0</span>
+                      <span>-0.5</span>
+                      <span>0</span>
+                      <span>+0.5</span>
+                      <span>+1.0</span>
                     </div>
-                  ))}
-                </div>
+                    {/* Keterangan kategori */}
+                    <div className="space-y-1.5 mt-2">
+                      {[
+                        { color: 'rgb(140,0,0)', label: 'Air / Tidak Ada Vegetasi (< 0)' },
+                        { color: 'rgb(200,20,0)', label: 'Lahan Terbuka (0 - 0.1)' },
+                        { color: 'rgb(255,200,0)', label: 'Vegetasi Jarang (0.1 - 0.3)' },
+                        { color: 'rgb(173,255,47)', label: 'Vegetasi Sedang (0.3 - 0.5)' },
+                        { color: 'rgb(26,130,0)', label: 'Vegetasi Sangat Lebat (> 0.5)' },
+                      ].map((item, idx) => (
+                        <div key={idx} className="flex items-center space-x-2">
+                          <div
+                            className="w-4 h-4 rounded flex-shrink-0 border border-slate-600/40"
+                            style={{ background: item.color }}
+                          />
+                          <span className="text-xs text-slate-300 leading-tight">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {legend.items.map((item: any, index: number) => (
+                      <div key={index} className="flex items-center space-x-3 group">
+                        {item.isImage ? (
+                          <div className="w-5 h-5 rounded shadow-sm group-hover:scale-110 transition-transform flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                        ) : (
+                          <div 
+                            className="w-5 h-5 rounded shadow-sm group-hover:scale-110 transition-transform flex-shrink-0"
+                            style={{
+                              background: item.color,
+                              ...(item.pattern === 'dashed' && {
+                                backgroundImage: 'repeating-linear-gradient(90deg, #f97316 0, #f97316 8px, transparent 8px, transparent 16px)',
+                                backgroundSize: '100% 3px',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'repeat-x',
+                                border: 'none'
+                              })
+                            }}
+                          />
+                        )}
+                        <span className="text-xs font-medium text-slate-200 leading-tight">
+                          {item.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             

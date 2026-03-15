@@ -10,13 +10,16 @@ const EkowisataPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // FIXED: Urutan baru dan default state yang benar
   const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({
-    bekantan: true,    // Spot Observasi Bekantan - aktif by default
-    boundary: true,    // Rekomendasi Rute Ekowisata - aktif by default
-    mangrove: false,   // Kawasan Hutan Mangrove - nonaktif by default
-    landcover: false,  // Tutupan Lahan - nonaktif by default
+    bekantan: true,
+    boundary: true,
+    mangrove: false,
+    landcover: false,
+    ndvi: false,
   });
+
+  // State untuk tahun NDVI yang dipilih
+  const [ndviYear, setNdviYear] = useState<number>(2024);
   
   const [basemap, setBasemap] = useState<'satellite' | 'street'>('satellite');
 
@@ -38,6 +41,10 @@ const EkowisataPage: React.FC = () => {
       ...prev,
       [layerName]: !prev[layerName],
     }));
+  };
+
+  const handleNDVIYearChange = (year: number) => {
+    setNdviYear(year);
   };
 
   if (error) {
@@ -64,6 +71,8 @@ const EkowisataPage: React.FC = () => {
         onToggle={() => setSidebarOpen(!sidebarOpen)}
         visibleLayers={visibleLayers}
         onLayerToggle={handleLayerToggle}
+        ndviYear={ndviYear}
+        onNDVIYearChange={handleNDVIYearChange}
       />
 
       <div className="flex-1 relative">
@@ -104,11 +113,13 @@ const EkowisataPage: React.FC = () => {
           showBoundary={visibleLayers.boundary}
           showOrthophoto={false}
           showBekantan={visibleLayers.bekantan}
+          showNDVI={visibleLayers.ndvi}
+          ndviYear={ndviYear}
         />
 
-        {/* Legenda Dinamis - Fixed relatif terhadap map container */}
+        {/* Legenda Dinamis */}
         <div className="absolute right-4 bottom-4 z-[10]">
-          <Legend visibleLayers={visibleLayers} />
+          <Legend visibleLayers={visibleLayers} ndviYear={ndviYear} />
         </div>
       </div>
     </div>

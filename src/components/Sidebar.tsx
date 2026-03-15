@@ -5,10 +5,20 @@ interface SidebarProps {
   onToggle: () => void;
   visibleLayers: { [key: string]: boolean };
   onLayerToggle: (layerName: string) => void;
+  ndviYear?: number;
+  onNDVIYearChange?: (year: number) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle, visibleLayers, onLayerToggle }) => {
-  // FIXED: Urutan layer baru sesuai requirement
+const NDVI_YEARS = [2019, 2020, 2021, 2022, 2023, 2024];
+
+const Sidebar: React.FC<SidebarProps> = ({
+  isOpen,
+  onToggle,
+  visibleLayers,
+  onLayerToggle,
+  ndviYear = 2024,
+  onNDVIYearChange,
+}) => {
   const layers = [
     { 
       id: 'bekantan', 
@@ -22,17 +32,24 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle, visibleLayers, onLa
       description: 'Sumber: Hasil Observasi',
       color: 'text-amber-400',
     },
-    { 
-      id: 'mangrove', 
-      name: 'Kawasan Hutan Mangrove yang dikelola Desa Srinanti',
-      description: 'Sumber: Kementrian Lingkungan Hidup dan Kehutanan RI',
-      color: 'text-teal-400',
-    },
+
     { 
       id: 'landcover', 
       name: 'Tutupan Lahan 2024',
       description: 'Sumber: Esri Living Atlas',
       color: 'text-blue-400',
+    },
+    {
+      id: 'ndvi',
+      name: 'NDVI (Indeks Vegetasi)',
+      description: 'Sumber: Sentinel-2, 2019-2024',
+      color: 'text-green-400',
+    },
+    { 
+      id: 'mangrove', 
+      name: 'Kawasan Hutan Mangrove yang dikelola Desa Srinanti',
+      description: 'Sumber: Kementrian Lingkungan Hidup dan Kehutanan RI',
+      color: 'text-teal-400',
     },
   ];
 
@@ -81,70 +98,77 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle, visibleLayers, onLa
             {/* Layer Controls */}
             <div className="p-4 space-y-2">
               {layers.map((layer) => (
-                <div
-                  key={layer.id}
-                  className="group relative bg-slate-700/30 border-2 border-slate-600/50 rounded-xl p-4 hover:border-teal-500/50 hover:bg-slate-700/50 transition-all duration-200"
-                >
-                  <label className="flex items-center cursor-pointer">
-                    {/* Toggle Switch */}
-                    <div className="relative flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={visibleLayers[layer.id]}
-                        onChange={() => onLayerToggle(layer.id)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-12 h-6 bg-slate-600 rounded-full peer peer-checked:bg-gradient-to-r peer-checked:from-teal-500 peer-checked:to-blue-600 transition-all duration-200 shadow-inner"></div>
-                      <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 peer-checked:translate-x-6 shadow-md"></div>
-                    </div>
-                    
-                    {/* Layer Info */}
-                    <div className="ml-4 flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={layer.color}>
-                        </span>
-                        <span className="font-semibold text-white text-sm tracking-tight">
-                          {layer.name}
-                        </span>
+                <div key={layer.id}>
+                  <div
+                    className="group relative bg-slate-700/30 border-2 border-slate-600/50 rounded-xl p-4 hover:border-teal-500/50 hover:bg-slate-700/50 transition-all duration-200"
+                  >
+                    <label className="flex items-center cursor-pointer">
+                      {/* Toggle Switch */}
+                      <div className="relative flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={visibleLayers[layer.id]}
+                          onChange={() => onLayerToggle(layer.id)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-12 h-6 bg-slate-600 rounded-full peer peer-checked:bg-gradient-to-r peer-checked:from-teal-500 peer-checked:to-blue-600 transition-all duration-200 shadow-inner"></div>
+                        <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 peer-checked:translate-x-6 shadow-md"></div>
                       </div>
-                      <p className="text-xs text-slate-400 leading-relaxed">
-                        {layer.description}
+                      
+                      {/* Layer Info */}
+                      <div className="ml-4 flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className={layer.color}></span>
+                          <span className="font-semibold text-white text-sm tracking-tight">
+                            {layer.name}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-400 leading-relaxed">
+                          {layer.description}
+                        </p>
+                      </div>
+                    </label>
+
+                    {/* Active Indicator */}
+                    {visibleLayers[layer.id] && (
+                      <div className="absolute top-2 right-2">
+                        <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* NDVI Year Selector - tampil hanya ketika layer NDVI aktif */}
+                  {layer.id === 'ndvi' && visibleLayers['ndvi'] && (
+                    <div className="mt-2 mx-1 bg-slate-800/60 rounded-xl border border-green-500/20 p-4">
+                      <p className="text-xs font-bold text-green-400 uppercase tracking-wider mb-3">
+                        Pilih Tahun NDVI
                       </p>
-                    </div>
-                  </label>
-                  
-                  {/* Active Indicator */}
-                  {visibleLayers[layer.id] && (
-                    <div className="absolute top-2 right-2">
-                      <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+                      <div className="grid grid-cols-3 gap-2">
+                        {NDVI_YEARS.map((year) => (
+                          <button
+                            key={year}
+                            onClick={() => onNDVIYearChange && onNDVIYearChange(year)}
+                            className={`
+                              py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-200
+                              ${ndviYear === year
+                                ? 'bg-gradient-to-r from-green-500 to-teal-600 text-white shadow-lg shadow-green-500/30'
+                                : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50 hover:text-white border border-slate-600/50'
+                              }
+                            `}
+                          >
+                            {year}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-xs text-slate-500 mt-3 leading-relaxed">
+                        Menampilkan NDVI tahun {ndviYear}. Klik area peta untuk melihat nilai piksel.
+                      </p>
                     </div>
                   )}
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Info Card
-          <div className="bg-gradient-to-br from-teal-500/10 to-blue-500/10 rounded-2xl p-5 border border-teal-500/20">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-teal-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-          </div> */}
-
-          {/* Layer Count
-          <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/50">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-slate-400 uppercase tracking-wider">Layer Aktif</span>
-              <span className="text-2xl font-bold text-teal-400">
-                {Object.values(visibleLayers).filter(Boolean).length}
-                <span className="text-sm text-slate-500 ml-1">/ {layers.length}</span>
-              </span>
-            </div>
-          </div> */}
         </div>
       </div>
     </>
