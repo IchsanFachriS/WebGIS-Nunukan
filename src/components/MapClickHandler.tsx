@@ -1,140 +1,98 @@
 import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import { getNDVIColor } from './NDVILayer';
+import { LANDCOVER_COLOR } from './GeoTIFFLayer';
+import L from 'leaflet';
 
 declare global {
   interface Window {
-    L: any;
     geoblaze: any;
   }
 }
 
 interface MapClickHandlerProps {
   landcoverGeoRaster: any | null;
-  ndviGeoRaster: any | null;
-  ndviYear: number;
-  showLandcover: boolean;
-  showNDVI: boolean;
+  ndviGeoRaster:      any | null;
+  ndviYear:           number;
+  showLandcover:      boolean;
+  showNDVI:           boolean;
 }
 
-// ─── Landcover helpers ───────────────────────────────────────────────────────
+// ─── helpers ──────────────────────────────────────────────────────────────────
 
-const getLandcoverName = (value: number): string => {
-  switch (value) {
-    case 1:  return 'Air';
-    case 2:  return 'Vegetasi';
-    case 4:  return 'Vegetasi Terendam Air';
-    case 5:  return 'Tanaman';
-    case 7:  return 'Area Terbangun';
-    case 8:  return 'Tanah Kosong';
-    case 9:  return 'Salju / Es';
-    case 10: return 'Awan';
-    case 11: return 'Padang Rumput';
-    default: return 'Tidak Diketahui';
-  }
+const LANDCOVER_NAME: Record<number, string> = {
+  1: 'Air', 2: 'Vegetasi', 4: 'Vegetasi Terendam Air', 5: 'Tanaman',
+  7: 'Area Terbangun', 8: 'Tanah Kosong', 9: 'Salju / Es',
+  10: 'Awan', 11: 'Padang Rumput',
 };
 
-const getLandcoverColor = (value: number): string | null => {
-  switch (value) {
-    case 1:  return '#0000FF';
-    case 2:  return '#00FF00';
-    case 4:  return '#90EE90';
-    case 5:  return '#32CD32';
-    case 7:  return '#FF0000';
-    case 8:  return '#D2691E';
-    case 9:  return '#FFFFFF';
-    case 10: return '#CCCCCC';
-    case 11: return '#ADFF2F';
-    default: return null;
-  }
+const getNDVIKategori = (v: number) => {
+  if (v < 0)   return { k: 'Air / Tidak Ada Vegetasi',     d: 'Permukaan air, awan, atau area non-vegetasi' };
+  if (v < 0.1) return { k: 'Lahan Terbuka / Tanah Kosong', d: 'Tanah gundul, area terbangun, atau pasir' };
+  if (v < 0.2) return { k: 'Vegetasi Sangat Jarang',        d: 'Padang rumput kering atau semak sangat renggang' };
+  if (v < 0.3) return { k: 'Vegetasi Jarang',               d: 'Semak atau padang rumput renggang' };
+  if (v < 0.4) return { k: 'Vegetasi Sedang',               d: 'Vegetasi cukup lebat, semak dan hutan sekunder' };
+  if (v < 0.5) return { k: 'Vegetasi Cukup Lebat',          d: 'Hutan sekunder atau mangrove muda' };
+  if (v < 0.6) return { k: 'Vegetasi Lebat',                d: 'Mangrove atau hutan tropis lebat' };
+  return         { k: 'Vegetasi Sangat Lebat',              d: 'Hutan mangrove atau hutan tropis sangat lebat' };
 };
 
-// ─── NDVI helpers ────────────────────────────────────────────────────────────
-
-const getNDVIKategori = (value: number): { kategori: string; keterangan: string } => {
-  if (value < 0)    return { kategori: 'Air / Tidak Ada Vegetasi', keterangan: 'Permukaan air, awan, atau area non-vegetasi' };
-  if (value < 0.1)  return { kategori: 'Lahan Terbuka / Tanah Kosong', keterangan: 'Tanah gundul, area terbangun, atau pasir' };
-  if (value < 0.2)  return { kategori: 'Vegetasi Sangat Jarang', keterangan: 'Padang rumput kering atau semak sangat renggang' };
-  if (value < 0.3)  return { kategori: 'Vegetasi Jarang', keterangan: 'Semak atau padang rumput renggang' };
-  if (value < 0.4)  return { kategori: 'Vegetasi Sedang', keterangan: 'Vegetasi cukup lebat, semak dan hutan sekunder' };
-  if (value < 0.5)  return { kategori: 'Vegetasi Cukup Lebat', keterangan: 'Hutan sekunder atau mangrove muda' };
-  if (value < 0.6)  return { kategori: 'Vegetasi Lebat', keterangan: 'Mangrove atau hutan tropis lebat' };
-  return              { kategori: 'Vegetasi Sangat Lebat', keterangan: 'Hutan mangrove atau hutan tropis sangat lebat' };
-};
-
-// ─── Popup builders ──────────────────────────────────────────────────────────
-
-const buildLandcoverPopup = (value: number): string => {
-  const name  = getLandcoverName(value);
-  const color = getLandcoverColor(value) ?? '#888';
-  return `
-    <div style="font-family:sans-serif;min-width:180px;">
-      <h3 style="margin:0 0 10px;color:#0d9488;font-size:14px;font-weight:bold;">
-        Tutupan Lahan 2024
-      </h3>
-      <div style="display:flex;align-items:center;gap:10px;background:#f0fdfa;border:1px solid #99f6e4;border-radius:8px;padding:10px;margin-bottom:10px;">
-        <div style="width:26px;height:26px;background:${color};border:1px solid rgba(0,0,0,.15);border-radius:5px;flex-shrink:0;"></div>
-        <div>
-          <div style="font-size:14px;font-weight:bold;color:#134e4a;">${name}</div>
-          <div style="font-size:11px;color:#6b7280;margin-top:2px;">Kode kelas: ${value}</div>
-        </div>
-      </div>
-      <p style="margin:8px 0 0;font-size:10px;color:#9ca3af;border-top:1px solid #e5e7eb;padding-top:6px;">
-        Sumber: Esri Living Atlas
-      </p>
-    </div>
-  `;
-};
-
-const buildNDVIPopup = (rawValue: number, year: number): string => {
-  const value    = parseFloat(rawValue.toFixed(4));
-  const color    = getNDVIColor(value) ?? 'rgb(100,100,100)';
-  const { kategori, keterangan } = getNDVIKategori(value);
-  return `
-    <div style="font-family:sans-serif;min-width:200px;">
-      <h3 style="margin:0 0 10px;color:#0d9488;font-size:14px;font-weight:bold;">
-        NDVI Tahun ${year}
-      </h3>
-      <div style="display:flex;align-items:center;gap:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px;margin-bottom:10px;">
-        <div style="width:28px;height:28px;background:${color};border:1px solid rgba(0,0,0,.15);border-radius:6px;flex-shrink:0;"></div>
-        <div>
-          <div style="font-size:20px;font-weight:bold;color:#064e3b;line-height:1;">${value}</div>
-          <div style="font-size:11px;color:#6b7280;margin-top:2px;">Nilai NDVI</div>
-        </div>
-      </div>
-      <div style="font-size:12px;line-height:1.6;">
-        <p style="margin:4px 0;">
-          <strong style="color:#374151;">Kategori:</strong>
-          <span style="color:#059669;"> ${kategori}</span>
-        </p>
-        <p style="margin:4px 0;color:#6b7280;font-size:11px;font-style:italic;">${keterangan}</p>
-      </div>
-      <p style="margin:10px 0 0;font-size:10px;color:#9ca3af;border-top:1px solid #e5e7eb;padding-top:6px;">
-        Sumber: Sentinel-2 / Landsat | Tahun ${year}
-      </p>
-    </div>
-  `;
-};
-
-// ─── Identify value from georaster at latlng ─────────────────────────────────
-
-const identifyRaster = (georaster: any, lng: number, lat: number): number | null => {
+const identify = (georaster: any, lng: number, lat: number): number | null => {
   try {
-    // geoblaze.identify bisa sync atau async tergantung versi
-    const result = window.geoblaze.identify(georaster, [lng, lat]);
-    if (result === null || result === undefined) return null;
-    // Beberapa versi mengembalikan array, beberapa scalar
-    const raw = Array.isArray(result) ? result[0] : result;
+    const res = window.geoblaze.identify(georaster, [lng, lat]);
+    if (res === null || res === undefined) return null;
+    const raw = Array.isArray(res) ? res[0] : res;
     if (raw === null || raw === undefined || isNaN(Number(raw))) return null;
-    // Cek nodata
     if (georaster.noDataValue !== null && Number(raw) === georaster.noDataValue) return null;
     return Number(raw);
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 };
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// ─── popup HTML ───────────────────────────────────────────────────────────────
+
+const ndviSection = (raw: number, year: number) => {
+  const v     = parseFloat(raw.toFixed(4));
+  const color = getNDVIColor(v) ?? 'rgb(100,100,100)';
+  const { k, d } = getNDVIKategori(v);
+  return `
+    <div>
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px;">
+        <div style="width:3px;height:12px;background:#16a34a;border-radius:2px;flex-shrink:0;"></div>
+        <span style="font-size:10px;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:.06em;">NDVI Tahun ${year}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;padding:8px;margin-bottom:4px;">
+        <div style="width:22px;height:22px;background:${color};border:1px solid rgba(0,0,0,.12);border-radius:4px;flex-shrink:0;"></div>
+        <div>
+          <span style="font-size:16px;font-weight:700;color:#064e3b;">${v}</span>
+          <div style="font-size:10px;color:#6b7280;">Nilai NDVI</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#374151;"><strong>Kategori:</strong> <span style="color:#059669;">${k}</span></div>
+      <div style="font-size:10px;color:#9ca3af;font-style:italic;margin-top:1px;">${d}</div>
+    </div>`;
+};
+
+const landcoverSection = (raw: number) => {
+  const v     = Math.round(raw);
+  const name  = LANDCOVER_NAME[v] ?? 'Tidak Diketahui';
+  const color = LANDCOVER_COLOR[v] ?? '#888888';
+  return `
+    <div>
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px;">
+        <div style="width:3px;height:12px;background:#0891b2;border-radius:2px;flex-shrink:0;"></div>
+        <span style="font-size:10px;font-weight:700;color:#164e63;text-transform:uppercase;letter-spacing:.06em;">Tutupan Lahan 2024</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f0fdfa;border:1px solid #99f6e4;border-radius:7px;padding:8px;">
+        <div style="width:22px;height:22px;background:${color};border:1px solid rgba(0,0,0,.12);border-radius:4px;flex-shrink:0;"></div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#134e4a;">${name}</div>
+          <div style="font-size:10px;color:#6b7280;">Kode kelas: ${v}</div>
+        </div>
+      </div>
+    </div>`;
+};
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 const MapClickHandler: React.FC<MapClickHandlerProps> = ({
   landcoverGeoRaster,
@@ -145,65 +103,72 @@ const MapClickHandler: React.FC<MapClickHandlerProps> = ({
 }) => {
   const map = useMap();
 
-  // Gunakan ref agar handler selalu baca state terbaru tanpa re-register
-  const stateRef = useRef({
-    landcoverGeoRaster,
-    ndviGeoRaster,
-    ndviYear,
-    showLandcover,
-    showNDVI,
-  });
-
+  // Semua state disimpan di ref agar listener tidak perlu di-register ulang
+  const stateRef = useRef({ landcoverGeoRaster, ndviGeoRaster, ndviYear, showLandcover, showNDVI });
   useEffect(() => {
     stateRef.current = { landcoverGeoRaster, ndviGeoRaster, ndviYear, showLandcover, showNDVI };
   });
 
   useEffect(() => {
-    const handleClick = (e: L.LeafletMouseEvent) => {
+    const container = map.getContainer();  // elemen <div> root peta
+
+    const handleDOMClick = (ev: MouseEvent) => {
       const { landcoverGeoRaster, ndviGeoRaster, ndviYear, showLandcover, showNDVI } =
         stateRef.current;
 
-      // Tidak ada layer TIF yang aktif — biarkan event lain menangani
       if (!showLandcover && !showNDVI) return;
 
-      const { lng, lat } = e.latlng;
-      let popupHtml: string | null = null;
+      // Konversi koordinat pixel → LatLng menggunakan Leaflet
+      const rect   = container.getBoundingClientRect();
+      const point  = L.point(ev.clientX - rect.left, ev.clientY - rect.top);
+      const latlng = map.containerPointToLatLng(point);
+      const { lng, lat } = latlng;
 
-      // Prioritas: NDVI lebih spesifik, tampilkan jika aktif
-      if (showNDVI && ndviGeoRaster) {
-        const value = identifyRaster(ndviGeoRaster, lng, lat);
-        if (value !== null) {
-          popupHtml = buildNDVIPopup(value, ndviYear);
-        }
-      }
+      console.log('[MapClickHandler] DOM click fired', { lng, lat, showNDVI, showLandcover });
 
-      // Fallback ke landcover jika NDVI tidak menghasilkan nilai
-      if (!popupHtml && showLandcover && landcoverGeoRaster) {
-        const value = identifyRaster(landcoverGeoRaster, lng, lat);
-        if (value !== null) {
-          const color = getLandcoverColor(Math.round(value));
-          if (color) {
-            popupHtml = buildLandcoverPopup(Math.round(value));
-          }
-        }
-      }
+      const ndviVal = (showNDVI && ndviGeoRaster)
+        ? identify(ndviGeoRaster, lng, lat)
+        : null;
 
-      if (popupHtml) {
-        // stopPropagation agar GeoJSON popup di bawah tidak ikut muncul
-        window.L.popup({ maxWidth: 280 })
-          .setLatLng(e.latlng)
-          .setContent(popupHtml)
-          .openOn(map);
-      }
+      const lcRaw = (showLandcover && landcoverGeoRaster)
+        ? identify(landcoverGeoRaster, lng, lat)
+        : null;
+      const lcVal = (lcRaw !== null && LANDCOVER_COLOR[Math.round(lcRaw)] !== undefined)
+        ? lcRaw
+        : null;
+
+      console.log('[MapClickHandler] identified values', { ndviVal, lcVal });
+
+      if (ndviVal === null && lcVal === null) return;
+
+      const parts: string[] = [];
+      const sources: string[] = [];
+
+      if (ndviVal !== null) { parts.push(ndviSection(ndviVal, ndviYear)); sources.push(`Sentinel-2 / Landsat (${ndviYear})`); }
+      if (ndviVal !== null && lcVal !== null) parts.push('<div style="border-top:1px dashed #e2e8f0;margin:8px 0;"></div>');
+      if (lcVal   !== null) { parts.push(landcoverSection(lcVal));         sources.push('Esri Living Atlas'); }
+
+      const html = `
+        <div style="font-family:sans-serif;min-width:200px;max-width:255px;padding:2px;">
+          ${parts.join('')}
+          <p style="margin:8px 0 0;font-size:9px;color:#9ca3af;border-top:1px solid #f1f5f9;padding-top:5px;">
+            Sumber: ${sources.join(' &middot; ')}
+          </p>
+        </div>`;
+
+      L.popup({ maxWidth: 300 })
+        .setLatLng(latlng)
+        .setContent(html)
+        .openOn(map);
     };
 
-    // Gunakan priority tinggi: daftar di fase capture sebelum layer GeoJSON
-    map.on('click', handleClick);
+    // Pasang di container DOM — tidak melewati sistem event Leaflet sama sekali
+    container.addEventListener('click', handleDOMClick);
 
     return () => {
-      map.off('click', handleClick);
+      container.removeEventListener('click', handleDOMClick);
     };
-  }, [map]); // hanya register sekali; state dibaca via ref
+  }, [map]);  // hanya mount sekali; state dibaca via ref
 
   return null;
 };
