@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, ScaleControl, GeoJSON, useMap } from 'react-leaflet';
 import OrthophotoLayer from '../components/OrthophotoLayer';
+import MapInset from '../components/MapInset';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import MapInsetNavigation from '../components/MapInsetNavigation'; 
 
 // Custom marker icons untuk amenitas
 const createCustomIcon = (color: string) => {
@@ -167,11 +167,11 @@ const AmenitasPage: React.FC = () => {
     return `
       <div style="font-family: sans-serif; min-width: 250px; max-width: 320px;">
         <h3 style="margin: 0 0 8px 0; color: #8b5cf6; font-size: 16px; font-weight: bold;">
-          ${props.descriptio || 'Amenitas'}
+          ${props.Name || 'Amenitas'}
         </h3>
         <div style="font-size: 13px; line-height: 1.6;">
           <p style="margin: 4px 0; color: #475569;">
-            ${props.descriptio || '-'}
+            <strong>Jenis:</strong> ${props.descriptio || '-'}
           </p>
         </div>
         ${photoGalleryHTML}
@@ -301,7 +301,9 @@ const AmenitasPage: React.FC = () => {
 
       {/* Map Container */}
       <div className="flex-1 relative">
-        <MapInsetNavigation />
+        {/* Map Inset dengan Minimap */}
+        <MapInset basemap={basemap} />
+        
         {/* Basemap Switcher */}
         <div className="absolute top-6 right-6 z-[20]">
           <div className="bg-slate-800/90 backdrop-blur-md p-1.5 rounded-2xl shadow-xl border border-teal-500/20 flex gap-1">

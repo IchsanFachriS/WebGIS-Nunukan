@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Map from '../components/Map';
 import Sidebar from '../components/Sidebar';
 import Legend from '../components/Legend';
-import MapInsetNavigation from '../components/MapInsetNavigation';
+import MapInset from '../components/MapInset';
 import { MangroveGeoJSON } from '../types';
 
 const EkowisataPage: React.FC = () => {
@@ -67,8 +67,8 @@ const EkowisataPage: React.FC = () => {
       />
 
       <div className="flex-1 relative">
-        {/* Map Inset Navigation */}
-        <MapInsetNavigation />
+        {/* Map Inset dengan Minimap */}
+        <MapInset basemap={basemap} />
 
         {/* Floating Basemap Switcher */}
         <div className="absolute top-6 right-6 z-[20]">
